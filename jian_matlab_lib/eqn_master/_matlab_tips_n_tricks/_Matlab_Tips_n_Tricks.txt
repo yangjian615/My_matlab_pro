@@ -1,0 +1,33 @@
+Calling Matlab scripts from Windows:
+Create a batch file, calling matlab to execute script myfile.m:
+win $MATLABROOT\bin\matlab.exe -r myfile
+
+Use filter() as much as possible. It is way faster than doing the same operations in a for loop. Even a moving average could be computed by an appropriate selection of filter parameters i.e.  filter( ones(N,1)*(1/N), 1, x) gives a moving average in window of size N (the first N-1 values will only be an approximation).
+
+histc() is faster than hist() ! I think that hist() calls histc() anyway, so always use histc() in the first place to speed up things a bit (not much, but noticeable)
+
+Mathematica function flatten() can be employed in Matlab by using matrix index notation. i.e. M( 1:prod(size(M)) ) will give all elements of M in a single-row vector.
+
+Fitting with polyfit() instead of fit(), for linear or polynomial fitting! 
+
+Functions to remember:
+
+setdiff(A,B) 
+gives the elements in A than are not in B. When you have the indices of certain elements in a series in a vector I and want to take those NOT in I, do setdiff( I, 1:length(X) ).
+
+sub2ind() & ind2sub()
+switch between the two index notations, by subscripts (i,j) to index (i.e. element 12)
+
+char()
+When converting from a cell of strigs to a char matrix, if the strings have unequal lengths, use char() and it will convert the cell to an array of enough dimensionality to hold the largest string and pad the smaller ones with whitespace.
+
+*** Coordinate Transforms to and from Spherical ***
+***  - WARNING - WARNING - WARNING - WARNING -  ***
+Matlab built-in functions for coordinate transforms between cartesian and spherical systems symbolise the elevation and azimuth angles with PHI and THETA respectively, contrary to common notation of spherical coordinates!!! Be careful!
+
+fprintf()
+Printing in a line by line basis can take much more time.  Instead, load everything into a char matrix and print in one go! Use sprintf() to reformat a vector of numbers to a char format (instead of num2str() which is slower), use reshape() if needed, to reshape the output of sprintf(), which might be a single line, to char matrix format, concatenate with [,] notation, adding newline chars etc and print everything with a single call of the fprintf() function.
+
+Assign Variable outside of scope
+assignin('base', 'VariableNameInFunction', newVariable)
+

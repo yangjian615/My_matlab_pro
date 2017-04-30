@@ -1,0 +1,17 @@
+TIME_SERIES_FORMAT
+
+All time series data should be given in the following format: 
+
+A matrix of at least two columns, in which the LAST column contains time values (preferably in matlabd format) and the first 1 to N-1 columns will hold the actual data values. In this way it is always possible to read the time by doing X(:,end), which will give the last column, and then use indices 1 to N for the actual data values X(:,1), X(:,2) etc. 
+
+Example 1:
+
+A scalar variable series should be a two-column matrix i.e. B, with B(:,1) being the variable values and B(:,end) = B(:,2) the corresponding time instants.
+
+Example 2:
+
+A 3D vector variable series will be a 4 column matrix i.e. B, with B(:,1), B(:,2), B(:,3) being the 3 coordinate values and B(:,end) their corresponding time.
+
+
+
+

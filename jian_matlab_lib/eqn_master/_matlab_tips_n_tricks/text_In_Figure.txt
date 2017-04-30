@@ -1,0 +1,4 @@
+
+h1 = figure(01);
+
+figure_txt1 = uicontrol('Parent', h1, 'style', 'text', 'Units', 'normalized', 'position', [0.1 0.9 0.1 0.1], 'fontsize', 15, 'Visible', 'on', 'string', 'blah blah blah blah');

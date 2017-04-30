@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<!-- saved from url=(0090)http://www.mathworks.com/help/matlab/matlab_prog/techniques-for-improving-performance.html -->
+<html itemscope="" itemtype="http://www.mathworks.com/help/schema/MathWorksDocPage" class="wf-futurapt-n4-active wf-futurapt-i4-active wf-futurapt-n5-active wf-futurapt-i5-active wf-futurapt-n7-active wf-futurapt-i7-active wf-automate-n7-active wf-minionprosubhead-n4-active wf-museoslab-n7-active wf-nimbussanscondensed-n7-active wf-active"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/auth016.js"></script><link rel="stylesheet" type="text/css" href="./MATLAB Techniques for Improving Performance_files/widget118.css" media="all">
+<meta charset="utf-8">
+<title>Techniques for Improving Performance - MATLAB &amp; Simulink</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="./MATLAB Techniques for Improving Performance_files/reset.css" rel="stylesheet" type="text/css">
+<link href="./MATLAB Techniques for Improving Performance_files/960.css" rel="stylesheet" type="text/css">
+<link href="./MATLAB Techniques for Improving Performance_files/site5.css" rel="stylesheet" type="text/css">
+<!--[if IE 6]>
+<link href="/includes_content/nextgen/css/site5_ie6.css?20131015" rel="stylesheet" type="text/css">
+<![endif]-->
+<!--[if IE 7]>
+<link href="/includes_content/nextgen/css/site5_ie7.css?20131015" rel="stylesheet" type="text/css">
+<![endif]-->
+<!--[if IE 8]>
+<link href="/includes_content/nextgen/css/site5_ie8.css?20131015" rel="stylesheet" type="text/css">
+<![endif]-->
+<!--[if IE 9]>
+<link href="/includes_content/nextgen/css/site5_ie9.css?20131015" rel="stylesheet" type="text/css">
+<![endif]-->
+<link rel="stylesheet" href="http://www.mathworks.com/includes_content/nextgen/css/doc_center/doc_center.css">
+<!--[if IE 6]>
+<link href="/includes_content/nextgen/css/doc_center/doc_center_ie6.css" rel="stylesheet" type="text/css">
+<![endif]-->
+<!--[if IE 7]>
+<link href="/includes_content/nextgen/css/doc_center/doc_center_ie7.css" rel="stylesheet" type="text/css">
+<![endif]-->
+<!--[if IE 8]>
+<link href="/includes_content/nextgen/css/doc_center/doc_center_ie8.css" rel="stylesheet" type="text/css">
+<![endif]-->
+<!--[if IE 9]>
+<link href="/includes_content/nextgen/css/doc_center/doc_center_ie9.css" rel="stylesheet" type="text/css">
+<![endif]-->
+<link href="./MATLAB Techniques for Improving Performance_files/doc_center_print.css" rel="stylesheet" type="text/css" media="print">
+<script type="text/javascript" async="" src="./MATLAB Techniques for Improving Performance_files/ahy.js"></script><script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/jquery-latest.js"></script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/jquery.hover-intent.js"></script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/localnav.js"></script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/global.js"></script>
+<script type="text/javascript" language="JavaScript1.3">var domain = "com";</script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/xvy5baa.js"></script>
+<style type="text/css">.tk-futura-pt{font-family:"futura-pt","Arial","Helvetica",sans-serif;}.tk-automate{font-family:"automate",sans-serif;}.tk-minion-pro-subhead{font-family:"minion-pro-subhead",serif;}.tk-museo-slab{font-family:"museo-slab",serif;}.tk-nimbus-sans-condensed{font-family:"nimbus-sans-condensed",sans-serif;}</style><link rel="stylesheet" href="http://fonts.mathworks.com/k/xvy5baa-d.css?3bb2a6e53c9684ffdc9a99f11f5b2a6259e9e580e4938fcb487bcb48ad765cb4c66326ede94ac48d6ede67e4500a24e97a0591ac31cb9a79f653770995b73fcab179c8843e167d4d294efffce20684477e3030043617caba214c58b6f154839e39f8538e92cdd7798839d1a59e4d2b0791bbe6e783a84640f50c6e8f631ac5fd6e2928747046e8d3c8014f4e612066d47cd2f6460236d5af8067bf5be13b5d402fc9b57daa008f4648c576b0daffc4a09719f26748e4d12162f1841b44cd6114f823631817018292249f9424158262729aedfc9a7eaad686e19704ecf794505a5bf58346b86674958b71b58f71e596df71adc85eb06870a8aa3fa53e996a1fc9a87139ba5f47c506b20f3f5af733a35e32b903f3ea3ad28c5600e222fef219fa6d117c0d627897884abcb24d233482306c08ad5732c7ff2a2566cd5fa9554fc45a683e4492630af7837ac201efe374b4410a1ebb0f78147daed230fd70b646914a1bf60c1e5586d424a9779647a2ccd561f26b04a124f9"><script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+<link rel="stylesheet" href="./MATLAB Techniques for Improving Performance_files/docstyle.css" type="text/css">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta name="toctype" itemprop="pagetype" content="con">
+<meta name="infotype" itemprop="infotype" content="con">
+<meta name="description" itemprop="description" content="How to improve performance by vectorizing loops, preallocating arrays, etc.">
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/l10n.js"></script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/docscripts.js"></script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/mw.toc.js"></script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/mw.imagescaling.js"></script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/mw.imageanimation.js"></script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/mw.breadcrumb.js"></script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/jquery.highlight.js"></script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/nanoscroller.min.js"></script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/doc_omniture.js"></script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/respond.min.js"></script>
+<!-- Additions/overrides from the doc side -->
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/docsearch.js"></script>
+<script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/jquery.toggleval.js"></script>
+<!-- CUSTOM CSS -->
+<style>
+.fat_footer { padding:0px; }
+.fat_footer a:link, .fat_footer a:visited { color:#005fce; }
+.fat_footer .callout_container { margin-left:5px; font-size:1.0em; border:none; }
+.fat_footer .callout_container.rounded { border-radius:0px; -moz-border-radius:0px; -webkit-border-radius:0px; }
+.fat_footer .callout_container.gradient { background:transparent none; }
+.fat_footer .callout_content { min-height:45px; padding-top:10px; }
+</style>
+</head>
+      <body id="nextgen_b-dc" class="adjusted_template">
+      <div class="container_192">
+        <div class="grid_192">
+          <div class="page_container">
+            <div class="grid_192"><div class="header_container">
+<div class="headernav">
+<ul>
+<li class="headernav_country rollover_delay inactive_state"><a href="http://www.mathworks.com/company/worldwide/?s_tid=gn_loc">United States</a>
+<div class="countrynav_container gradient shadow">
+<ul>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.com/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">United States</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.com/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Canada</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.com.au/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Australia</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.de/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Österreich</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.nl/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Belgium</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.cn/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">中国</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.se/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Denmark</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.se/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Finland</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.fr/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">France</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.de/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Deutschland</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.in/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">India</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.co.uk/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Ireland</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.it/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Italia</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.co.jp/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">日本</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.co.kr/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">한국</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.nl/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Luxembourg</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.nl/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Netherlands</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.com.au/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">New Zealand</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.se/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Norway</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.com/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Portugal</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.es/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">España</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.se/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Sweden</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.ch/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">Schweiz / Suisse</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.co.uk/help/matlab/matlab_prog/techniques-for-improving-performance.html?action=changeCountry&s_tid=gn_loc_drop">United Kingdom</a></li>
+<!-- Code to Remove Tracking from Previous page and add new tracking -->
+<li><a href="http://www.mathworks.com/company/worldwide/?s_tid=gn_loc_drop?action=changeCountry&s_tid=gn_loc_drop">All Other Countries</a></li>
+</ul>
+</div>
+</li>
+<li class="headernav_contact"><a href="http://www.mathworks.com/company/aboutus/contact_us/?s_tid=gn_cntus">Contact Us</a></li>
+<li class="headernav_store"><a href="http://www.mathworks.com/store/default.do?s_tid=gn_store">Store</a></li>
+<li class="headernav_search"><form name="search" id="site_search" class="site_search" action="http://www.mathworks.com/searchresults/" method="get">
+<input type="hidden" name="c[]" value="entiresite">
+<input type="text" name="q" id="query" class="textfield">
+<input type="submit" id="searchbutton" value="Search" class="submit_go">
+</form></li>
+</ul>
+</div>
+<div class="mwa-nav">
+<ul>
+<li class="mwa-nav_account"><a id="mwa-create_account" href="https://www.mathworks.com/accesslogin/createProfile.do?uri=http://www.mathworks.com/help/matlab/matlab_prog/techniques-for-improving-performance.html">Create Account</a></li>
+<li class="mwa-nav_logout"><a id="mwa-log_in" href="https://www.mathworks.com/accesslogin/login.do?uri=http://www.mathworks.com/help/matlab/matlab_prog/techniques-for-improving-performance.html">Log In</a></li>
+</ul>
+</div>
+<div class="logo_container">
+<a href="http://www.mathworks.com/index.html?s_tid=gn_logo"><img src="./MATLAB Techniques for Improving Performance_files/bg_header_mwlogo_notag.jpg" alt="MathWorks" class="mw_logo"></a>
+<p class="tagline">Accelerating the pace of engineering and science</p>
+</div>
+</div></div>
+            <div class="grid_192"> <div class="topnav_container">
+<div class="topnav_frame">
+<div class="topnav">
+<ul>
+<li class="topnav_products "><a href="http://www.mathworks.com/products/?s_tid=gn_ps">Products &amp; Services</a></li>
+<li class="topnav_solutions "><a href="http://www.mathworks.com/solutions/?s_tid=gn_sol">Solutions</a></li>
+<li class="topnav_academia "><a href="http://www.mathworks.com/academia/?s_tid=gn_acad">Academia</a></li>
+<li class="topnav_support "><a href="http://www.mathworks.com/support/?s_tid=gn_supp">Support</a></li>
+<li class="topnav_community "><a href="http://www.mathworks.com/matlabcentral/?s_tid=gn_mlc">User Community</a></li>
+<li class="topnav_events "><a href="http://www.mathworks.com/company/events/?s_tid=gn_ev">Events</a></li>
+<li class="topnav_company "><a href="http://www.mathworks.com/company/?s_tid=gn_co">Company</a></li>
+</ul>
+</div>
+</div>
+</div> </div>
+            <div class="grid_192">        
+        <div class="section_image level_3" style="background-color:#04478b; background-image:url(/images/nextgen/global/bg_banner_wide.jpg);
+        ">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tbody><tr>
+          <td>                <h1>Documentation Center</h1>
+    	    </td>
+    		<td class="ctabox_container">	
+    		<ul class="ctabox">
+
+
+
+        <li><a href="http://www.mathworks.com/programs/bounce/doc_tryit.html" class="trial" target="">Trial Software</a></li>
+
+
+
+        <li><a href="http://www.mathworks.com/support/web_downloads_bounce.html?s_cid=1008_degr_docdn_270055" class="update" target="">Product Updates</a></li>
+
+
+
+  <li class="banner_share">
+    <div class="addthis_toolbox addthis_default_style"> <a href="http://www.addthis.com/bookmark.php?v=250&pubid=mathworks" class="addthis_button_compact at300m"><span class="at300bs at15nc at15t_compact"></span>Share</a>
+      <div class="atclear"></div>
+      
+    <div class="atclear"></div></div>
+    <script type="text/javascript">var addthis_config = {"data_track_clickback":true, "services_compact":"facebook,email,twitter,print,linkedin,favorites,google_plusone_share,more", "ui_open_windows":true, "ui_header_color":"#ffffff", "ui_header_background":"#3F74C1", "ui_cobrand":"MathWorks","data_track_clickback":true, ui_language: "en" };</script> 
+    <script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/addthis_widget.js"></script><div id="_atssh" style="visibility: hidden; height: 1px; width: 1px; position: absolute; z-index: 100000;"><iframe id="_atssh927" title="AddThis utility frame" style="height: 1px; width: 1px; position: absolute; z-index: 100000; border: 0px; left: 0px; top: 0px;" src="./MATLAB Techniques for Improving Performance_files/sh145.htm"></iframe></div><script type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/core118.js"></script> 
+  </li>
+      		</ul>
+ </td>
+        </tr>
+          </tbody></table>
+    </div>
+</div>
+            <div class="content_frame">
+              <div class="grid_192">
+                <div class="site_container site_toc_closed">
+                  <div class="toc_pane"><div xmlns:atict="http://www.arbortext.com/namespace/atict">
+<div class="toc_container_wrapper" tabindex="0" style="display: block; height: 432px; max-height: 432px; top: 10px; position: fixed;">
+<div class="toc_header" lang="en">
+<div class="toc_icon" id="toc.matlab">
+
+</div>
+<h3>Contents</h3>
+</div><!--close_toc_header-->
+<div class="toc_scroll_pane has-scrollbar" style="height: 400px; max-height: 400px;">
+<div class="toc_container" tabindex="0" style="height: 395px; max-height: 395px; right: -15px;">
+<!--BEGINNING OF TOC DATA-->
+<div class="toc_doc_center_home">
+<a href="http://www.mathworks.com/help/documentation-center.html">Documentation Center</a>
+</div>
+<ul>
+<li id="matlab.index.html" class="toc_expanded"><div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/index.html" class="corrected_url">MATLAB</a></div>
+</div>
+<ul>
+<li id="matlab.getting-started-with-matlab.html.0" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/getting-started-with-matlab.html" class="corrected_url">Getting Started with MATLAB</a></div>
+</div>
+</li><li id="matlab.examples.index.html">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper">
+<a href="http://www.mathworks.com/help/matlab/examples/index.html" class="corrected_url">Examples</a>
+</div>
+</div>
+</li>
+<li id="matlab.release-notes.html">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper">
+<a href="http://www.mathworks.com/help/matlab/release-notes.html" class="corrected_url">Release Notes</a></div>
+</div>
+</li>
+<li id="matlab.functionlist.html">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper">
+<a href="http://www.mathworks.com/help/matlab/functionlist.html" class="corrected_url">Functions</a>
+</div>
+</div>
+</li>
+<li id="matlab.index.html.1" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/index.html#language-fundamentals" class="corrected_url">Language Fundamentals</a></div>
+</div>
+</li><li id="matlab.index.html.2" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/index.html#mathematics" class="corrected_url">Mathematics</a></div>
+</div>
+</li><li id="matlab.index.html.3" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/index.html#graphics" class="corrected_url">Graphics</a></div>
+</div>
+</li><li id="matlab.index.html.4" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/index.html#programming-and-data-types" class="corrected_url">Programming Scripts and Functions</a></div>
+</div>
+</li><li id="matlab.index.html.5" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/index.html#data-and-file-management" class="corrected_url">Data and File Management</a></div>
+</div>
+</li><li id="matlab.index.html.6" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/index.html#gui-development" class="corrected_url">GUI Building</a></div>
+</div>
+</li><li id="matlab.index.html.7" class="toc_expanded">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/index.html#external-interfaces" class="corrected_url">Advanced Software Development</a></div>
+</div>
+<ul>
+<li id="matlab.object-oriented-programming.html.0" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/object-oriented-programming.html" class="corrected_url">Object-Oriented Programming</a></div>
+</div>
+</li><li id="matlab.exception-handling.html.1" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/exception-handling.html" class="corrected_url">Exception Handling</a></div>
+</div>
+</li><li id="matlab.performance-and-memory.html.2" class="toc_expanded">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/performance-and-memory.html" class="corrected_url">Performance and Memory</a></div>
+</div>
+<ul>
+<li id="matlab.code-performance.html.0" class="toc_expanded">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/code-performance.html" class="corrected_url">Code Performance</a></div>
+</div>
+<ul>
+<li class="toc_collapsed"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper">Functions</div></div><ul>
+<li id="matlab.ref.bench.html"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/ref/bench.html" class="corrected_url">bench</a></div></div></li>
+<li id="matlab.ref.cputime.html"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/ref/cputime.html" class="corrected_url">cputime</a></div></div></li>
+<li id="matlab.ref.memory.html"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/ref/memory.html" class="corrected_url">memory</a></div></div></li>
+<li id="matlab.ref.profile.html"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/ref/profile.html" class="corrected_url">profile</a></div></div></li>
+<li id="matlab.ref.profsave.html"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/ref/profsave.html" class="corrected_url">profsave</a></div></div></li>
+<li id="matlab.ref.tic.html"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/ref/tic.html" class="corrected_url">tic</a></div></div></li>
+<li id="matlab.ref.timeit.html"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/ref/timeit.html" class="corrected_url">timeit</a></div></div></li>
+<li id="matlab.ref.toc.html"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/ref/toc.html" class="corrected_url">toc</a></div></div></li>
+</ul>
+</li>
+<li class="toc_collapsed"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper">Examples and How To</div></div><ul>
+<li id="matlab.matlab_prog.analyzing-your-programs-performance.html"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/matlab_prog/analyzing-your-programs-performance.html" class="corrected_url">Analyzing Your Program's Performance</a></div></div></li>
+<li id="matlab.matlab_prog.profiling-for-improving-performance.html"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/matlab_prog/profiling-for-improving-performance.html" class="corrected_url">Profiling for Improving Performance</a></div></div></li>
+<li id="matlab.matlab_prog.determining-profiler-coverage.html"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/matlab_prog/determining-profiler-coverage.html" class="corrected_url">Determining Profiler Coverage</a></div></div></li>
+</ul>
+</li>
+<li class="toc_expanded"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper">Concepts</div></div><ul>
+<li id="matlab.matlab_prog.techniques-for-improving-performance.html" class="current_page"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper"><a href="./MATLAB Techniques for Improving Performance_files/MATLAB Techniques for Improving Performance.htm" class="corrected_url">Techniques for Improving Performance</a></div></div></li>
+<li id="matlab.matlab_prog.vectorization.html"><div class="node_element"><div class="wrapper img_wrapper"></div><div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/matlab_prog/vectorization.html" class="corrected_url">Vectorization</a></div></div></li>
+</ul>
+</li>
+</ul>
+</li><li id="matlab.memory.html.1" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/memory.html" class="corrected_url">Memory Usage</a></div>
+</div>
+</li></ul>
+</li><li id="matlab.matlab-unit-test-framework.html.3" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/matlab-unit-test-framework.html" class="corrected_url">Unit Testing Framework</a></div>
+</div>
+</li><li id="matlab.creating-help.html.4" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/creating-help.html" class="corrected_url">Custom Documentation</a></div>
+</div>
+</li><li id="matlab.external-interfaces.html.5" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/external-interfaces.html" class="corrected_url">External Programming Language Interfaces</a></div>
+</div>
+</li><li id="matlab.source-control.html.6" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/source-control.html" class="corrected_url">Source Control Integration</a></div>
+</div>
+</li></ul>
+</li><li id="matlab.index.html.8" class="toc_collapsed">
+<div class="node_element">
+<div class="wrapper img_wrapper"></div>
+<div class="wrapper text_wrapper"><a href="http://www.mathworks.com/help/matlab/index.html#desktop-tools-and-development-environment" class="corrected_url">Desktop Environment</a></div>
+</div>
+</li></ul>
+</li>
+</ul>
+<!--END OF TOC DATA-->
+</div><!--close_toc_container-->
+<div class="pane" style="display: none;"><div class="slider" style="height: 10667px; top: -10267px;"></div></div></div><!--close_toc_scroll_pane-->
+</div><!--close_toc_container_wrapper-->
+</div>
+</div><!--close_toc_pane-->
+                  <div class="doc_content_container">
+                    <div class="content_container" id="content_container"> 
+
+    
+    
+    
+    
+    
+    
+    
+
+	
+    
+
+
+               
+ 
+
+        
+        
+            
+<div id="search_crumb_container" style="width: 755px;"><div class="docsearch_container">
+<form id="docsearch_form" name="docsearch_form" method="get" action="http://www.mathworks.com/help/search/doccenter/en/R2013b">
+<label for="docsearch" class="hidden">Search MATLAB Documentation</label>
+<input type="text" name="qdoc" id="docsearch" class="textfield toggleval" autocomplete="off" value="Search R2013b Documentation">
+<input type="submit" name="submitsearch" id="submitsearch" value="Search" class="docsearch_submit" disabled="">
+<script type="text/javascript">
+         $("input[name='qdoc']").toggleVal({
+            focusClass: "hasFocus"
+         });
+       </script>
+</form>
+</div>
+<div class="breadcrumb_container">
+<div class="breadcrumbs">
+<div class="breadcrumbs_outer"><div class="breadcrumbs_inner"><ul><li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb" class="breadcrumb_first"><a href="http://www.mathworks.com/help/documentation-center.html" itemprop="url"><span itemprop="title">R2013b</span></a></li><li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb" class="breadcrumb_product"><a href="http://www.mathworks.com/help/matlab/index.html" itemprop="url"><span itemprop="title">MATLAB</span></a></li><li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb"><a href="http://www.mathworks.com/help/matlab/index.html#external-interfaces" itemprop="url"><span itemprop="title">Advanced Software Development</span></a></li><li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb"><a href="http://www.mathworks.com/help/matlab/performance-and-memory.html" itemprop="url"><span itemprop="title">Performance and Memory</span></a></li><li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb" class="breadcrumb_last"><a href="http://www.mathworks.com/help/matlab/code-performance.html" itemprop="url"><span itemprop="title">Code Performance</span></a></li>
+</ul></div></div></div>
+</div>
+
+</div><section id="doc_center_content">  
+
+
+<a name="f8-784135"></a><h2 class="title r2013b" itemprop="title content" id="f8-784135">Techniques for Improving Performance</h2><a name="performance_techniques"></a><table border="0" cellpadding="4" cellspacing="0" class="pagenavtable"><tbody><tr><th>On this page…</th></tr><tr><td><p><a href="http://www.mathworks.com/help/matlab/matlab_prog/techniques-for-improving-performance.html#f8-793781" class="intrnllnk">Preallocating Arrays</a></p><p><a href="http://www.mathworks.com/help/matlab/matlab_prog/techniques-for-improving-performance.html#f8-791752" class="intrnllnk">Assigning Variables</a></p><p><a href="http://www.mathworks.com/help/matlab/matlab_prog/techniques-for-improving-performance.html#f8-790490" class="intrnllnk">Using Appropriate Logical Operators</a></p><p><a href="http://www.mathworks.com/help/matlab/matlab_prog/techniques-for-improving-performance.html#btimcn8" class="intrnllnk">Additional Tips on Improving Performance</a></p></td></tr></tbody></table><div itemprop="content"><a name="f8-793781"></a><h3 class="title" id="f8-793781"><a name="prog_prealloc_arrays"></a>Preallocating Arrays</h3><a name="opt_array_preallocation"></a><a class="indexterm" name="zmw57dd0e46590"></a><a class="indexterm" name="zmw57dd0e46595"></a><a class="indexterm" name="zmw57dd0e46600"></a><p><tt>for</tt> and <tt>while</tt> loops
+that incrementally increase the size of a data structure each time
+through the loop can adversely affect performance and memory use.
+Repeatedly resizing arrays often requires MATLAB<sup>®</sup> to spend extra
+time looking for larger contiguous blocks of memory, and then moving
+the array into those blocks. Often, you can improve code execution
+time by preallocating the maximum amount of space required for the
+array.</p><p>The following code displays the amount of time needed to create
+a scalar variable, <tt>x</tt>, and then to gradually increase
+the size of <tt>x</tt> in a <tt>for</tt> loop.</p><pre class="programlisting">tic
+x = 0;
+for k = 2:1000000
+   x(k) = x(k-1) + 5;
+end
+toc</pre><pre class="programlisting">Elapsed time is 0.301528 seconds.</pre><p>If you preallocate a 1-by-1,000,000 block of memory for <tt>x</tt> and
+initialize it to zero, then the code runs much faster because there
+is no need to repeatedly reallocate memory for the growing data structure.</p><pre class="programlisting">tic
+x = zeros(1, 1000000);
+for k = 2:1000000
+   x(k) = x(k-1) + 5;
+end
+toc</pre><pre class="programlisting">Elapsed time is 0.011938 seconds.</pre><p>Use the appropriate preallocation function for the kind of array
+you want to initialize:</p><ul type="disc"><li><p><tt>zeros</tt> for numeric arrays</p></li><li><p><tt>cell</tt> for character arrays</p></li></ul><a name="f8-793827"></a><h4 class="title" id="f8-793827">Preallocating a Nondouble Matrix</h4><p>When you preallocate a block of memory to hold a matrix of some
+type other than <tt>double</tt>, avoid using the method</p><pre class="programlisting">A = int8(zeros(100));</pre><p>This statement preallocates a 100-by-100 matrix of <tt>int8</tt>,
+first by creating a full matrix of <tt>double</tt> values,
+and then by converts each element to <tt>int8</tt>. Creating
+the array as <tt>int8</tt> values saves time and memory.
+For example:</p><pre class="programlisting">A = zeros(100, 'int8');</pre></div><div itemprop="content"><a name="f8-791752"></a><h3 class="title" id="f8-791752">Assigning Variables</h3><p>For best performance, keep the following suggestions in mind
+when you assign values to variables.</p><ul type="disc"><li><p>If you need to store data of a different type, it
+is advisable to create a new variable. Changing the class or array
+shape of an existing variable slows MATLAB down because it takes
+extra time to process.</p><p>This code changes the type of <tt>X</tt> from <tt>double</tt> to <tt>char</tt>,
+which has a negative impact on performance:</p><pre class="programlisting">X = 23;
+     .
+-- other code  --
+     .
+X = 'A';                  % X changed from type double to char
+     .
+-- other code  --</pre></li><li><p>You should not assign a real value to a variable that
+already holds a complex value, and vice versa. Assigning a complex
+number to a variable that already holds a real number impacts the
+performance of your program. </p></li></ul></div><div itemprop="content"><a name="f8-790490"></a><h3 class="title" id="f8-790490">Using Appropriate Logical Operators</h3><p>When performing a logical AND or OR operation, you have a choice
+of whether to use short-circuit operators.</p><table cellspacing="0" class="body" cellpadding="4" border="2"><colgroup><col width="26%"><col width="74%"></colgroup><thead><tr valign="top"><th><p>Operator</p></th><th><p>Description</p></th></tr>
+</thead><tbody><tr valign="top"><td><p><tt>&amp;, |</tt></p></td><td><p>Perform logical AND and OR on arrays element by element</p></td></tr>
+<tr valign="top"><td><p><tt>&amp;&amp;, ||</tt></p></td><td><p>Perform logical AND and OR on scalar values with short-circuiting</p></td></tr>
+</tbody></table><p></p><p>In <tt>if</tt> and <tt>while</tt> statements,
+it is more efficient to use the short-circuit operators, <tt>&amp;&amp;</tt> and <tt>||</tt>,
+because these operators often do not evaluate the entire logical expression.
+For example, whenever the first input argument is not numeric, MATLAB evaluates
+only the first part of this expression.</p><pre class="programlisting">if (isnumeric(varargin{1})) &amp;&amp; (ischar(varargin{2}))
+</pre><p>See <a href="http://www.mathworks.com/help/matlab/matlab_prog/logical-operators.html#f0-39129">Short-Circuit Operators</a> in the MATLAB documentation
+for a discussion about using <tt>&amp;&amp;</tt> and <tt>||</tt>.</p></div><div itemprop="content"><a name="btimcn8"></a><h3 class="title" id="btimcn8">Additional Tips on Improving Performance</h3><p>If the performance of your program remains a concern, then consider
+the following suggestions:</p><ul type="disc"><li><p>Split large script files into smaller ones, having
+the first file call the second if necessary.</p></li><li><p>Construct separate functions (or local functions and
+nested functions) from the larger chunks of code.</p></li><li><p>If you have overly complicated functions or expressions,
+use simpler ones to reduce size. Simpler functions often make good
+utility functions that you can share with others.</p></li><li><p>Use functions instead of scripts because they are
+generally faster.</p></li><li><p>Vectorize your code to take advantage of the full
+functionality of MATLAB.</p></li><li><p>Use a sparse matrix structure to vectorize code without
+requiring large amounts of memory.</p></li><li><p>Avoid running large processes in the background while
+executing your program in MATLAB.</p></li><li><p>Avoid overloading MATLAB built-in functions on
+any standard MATLAB data classes because this can negatively
+affect performance.</p></li></ul></div>
+<h2>More About</h2><ul><li><a href="http://www.mathworks.com/help/matlab/matlab_prog/analyzing-your-programs-performance.html">Analyzing Your Program's Performance</a></li><li><a href="http://www.mathworks.com/help/matlab/matlab_prog/profiling-for-improving-performance.html">Profiling for Improving Performance</a></li><li><a href="http://www.mathworks.com/help/matlab/matlab_prog/vectorization.html">Vectorization</a></li></ul>
+
+</section>
+<div class="feedbackblock">Was this topic helpful?
+<input type="button" value="Yes" onclick="openFeedbackWindow(&#39;http://www.mathworks.com/programs/bounce_hub_help.html?s_cid=Help_Topic_Survey&amp;surveyParams=&#39;+document.location.href+&#39;-YES-R2013b&#39;);">
+<input type="button" value="No" onclick="openFeedbackWindow(&#39;http://www.mathworks.com/programs/bounce_hub_help.html?s_cid=Help_Topic_Survey&amp;surveyParams=&#39;+document.location.href+&#39;-NO-R2013b&#39;);">
+</div>
+<!--Last updated: Wed Aug 21 19:15:28 EDT 2013-->
+<div class="footer_container execmatlabproduct">
+<div class="footer">
+<ul class="footernav">
+              <li class="footernav_trademarks"><a href="matlab:web([docroot '/acknowledgments.html'])">Acknowledgments</a></li>
+              <li class="footernav_trademarks"><a href="matlab:web([matlabroot '/trademarks.txt'])">Trademarks</a></li>
+              <li class="footernav_patents"><a href="matlab:web([matlabroot '/patents.txt'])">Patents</a></li>
+              <li class="footernav_help"><a href="matlab:web([matlabroot '/license.txt'])">Terms of Use</a></li>
+           </ul>
+<div class="copyright">© 1994-2013 The MathWorks, Inc.</div>
+</div>
+</div>
+ </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="grid_192">
+<div class="fat_footer">
+<div class="callout_container rounded gradient margined_0 "> <div class="callout_content bg_left left_top" style="background-image:url(/images/nextgen/callouts/bg-trial-arrow_02.png);"> <h3>Try MATLAB, Simulink, and Other Products</h3>
+<a href="http://www.mathworks.com/programs/trials/trial_request.html?prodcode=ML&eventid=711257130&s_iid=doc_trial_ML_footer" class="cta ">Get trial now</a>
+</div>
+</div>
+</div>
+</div>
+        <div class="grid_192"> <div class="footer_container">
+<div class="footer">
+<div class="social_media_icon_container">
+<div class="social_media_icons">
+<ul class="footernav">
+<li class="footernav_rss"><a href="http://www.mathworks.com/company/rss/index.html"></a></li>
+<li class="footernav_linkedin"><a href="http://www.mathworks.com/programs/bounce_hub_generic.html?s_tid=mlc_lkd&url=http://www.linkedin.com/company/the-mathworks_2" target="_blank"></a></li>
+<li class="footernav_google"><a href="http://www.mathworks.com/programs/bounce_hub_generic.html?s_tid=mlc_glg&url=https://plus.google.com/117177960465154322866?prsrc=3" target="_blank"></a></li>
+<li class="footernav_facebook"><a href="http://www.mathworks.com/programs/bounce_hub_generic.html?s_tid=mlc_fbk&url=http://www.facebook.com/MATLAB" target="_blank"></a></li>
+<li class="footernav_twitter"><a href="http://www.mathworks.com/programs/bounce_hub_generic.html?s_tid=mlc_twt&url=http://www.twitter.com/MATLAB" target="_blank"></a></li>
+</ul>
+</div>
+<p><em>Join the conversation</em></p>
+</div>
+<ul class="footernav">
+<li class="footernav_piracy"><a href="http://www.mathworks.com/company/aboutus/policies_statements/piracy.html">Preventing Piracy</a></li>
+<li class="footernav_privacy"><a href="http://www.mathworks.com/company/aboutus/policies_statements/">Privacy Policy</a></li>
+<li class="footernav_trademarks"><a href="http://www.mathworks.com/company/aboutus/policies_statements/trademarks.html">Trademarks</a></li>
+<li class="footernav_patents"><a href="http://www.mathworks.com/company/aboutus/policies_statements/patents.html">Patents</a></li>
+<li class="footernav_help"><a href="http://www.mathworks.com/help.html">Site Help</a></li>
+</ul>
+<div class="copyright">© 1994-2014 The MathWorks, Inc.</div>
+</div>
+</div>
+<!-- SURVEY POPUP CODE - BEGINS -->
+<script type="text/javascript" language="javascript">
+function getCookie(name) {
+var dc = document.cookie;
+var prefix = name + "=";
+var begin = dc.indexOf("; " + prefix);
+if (begin == -1) {
+begin = dc.indexOf(prefix);
+if (begin != 0) return null;
+} else
+{
+begin += 2;
+}
+var end = document.cookie.indexOf(";", begin);
+if (end == -1)
+end = dc.length;
+return unescape(dc.substring(begin + prefix.length, end));
+}
+// Sets the cookie for users who get the invite
+function setCookie(name, value, expires, path, domain, secure) {
+var curCookie = name + "=" + escape(value) +
+((expires) ? "; expires=" + expires.toGMTString() : "") +
+((path) ? "; path=" + path : "") +
+((domain) ? "; domain=" + domain : "") +
+((secure) ? "; secure" : "");
+document.cookie = curCookie;
+}
+function popup_survey()
+{
+setCookie("survey", "yes", new Date("April 30, 2011"), "/");
+openWindow('/programs/customersat/surveys/invites/invite_support.html', 460, 150, 'scrollbars=no,resizable=no', 'invitewin');
+}
+</script>
+<script language="JavaScript" type="text/javascript">
+//document.getElementById("Cookies").innerHTML = "visitedSupport:" + getCookie("visitedSupport") + "<br/> Survey:" + getCookie("survey");
+if((getCookie("visitedSupport") == "yes") && (getCookie("survey") == null))
+{
+popup_survey();
+}
+</script>
+<!-- SURVEY POPUP CODE - ENDS -->
+<!-- SiteCatalyst code version: H.24.4.
+Copyright 1996-2012 Adobe, Inc. All Rights Reserved
+More info available at http://www.omniture.com -->
+<script language="JavaScript" type="text/javascript" src="./MATLAB Techniques for Improving Performance_files/s_code.js"></script>
+<script language="JavaScript" type="text/javascript">
+<!--
+/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+var s_code=s.t();if(s_code)document.write(s_code)//--></script>
+<script language="JavaScript" type="text/javascript"><!--
+if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-')
+//--></script>
+<!--/DO NOT REMOVE/-->
+<!-- End SiteCatalyst code version: H.24.4. -->
+<!-- BEGIN Qualaroo -->
+<script type="text/javascript">
+// don't use Qualaroo in non-production environments
+if(document.location.host.indexOf("www.mathworks")>-1){
+var _kiq = _kiq || [];
+(function(){
+setTimeout(function(){
+var d = document, f = d.getElementsByTagName('script')[0], s = d.createElement('script'); s.type = 'text/javascript';
+s.async = true; s.src = '//s3.amazonaws.com/ki.js/49559/ahy.js'; f.parentNode.insertBefore(s, f);
+}, 1);
+})();
+}
+</script>
+<!-- END Qualaroo --> </div>
+      </div>
+      
+      
+
+</body></html>

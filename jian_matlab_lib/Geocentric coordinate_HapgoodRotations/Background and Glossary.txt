@@ -1,0 +1,107 @@
+Axial tilt (obliquity)
+        The angle between an object's rotational axis and its orbital axis;
+        equivalently, the angle between its equatorial plane and orbital plane.
+
+dipole tilt angle (dipole angle to GSMz)
+        It is clear that the GSM z-axis is not coincident with the magnetic
+        dipole. The dipole tilt angle is the angle of the north magnetic pole
+        to the GSM z-axis, and is positive when the north magnetic pole
+        is tilted toward the sun. In addition to a yearly period due to the
+        motion of Earth about the sun, this coordinate system rocks about
+        the x-axis with a 24 h period. The y-axis lies in Earth's magnetic
+        equator and is positive toward the dawn-dusk meridian.
+
+GEI     The Geocentric Equatorial Inertial System (GEI) has its X-axis pointing
+        from the Earth towards the first point of Aries (the position of the sun
+        at the vernal equinox). This direction, when the Earth's equatorial plane
+        tilt axis is aligned toward the sun, is the intersection of the Earth's
+        equatorial plane and the solar ecliptic plane. The Z-axis is parallel to
+        Earth's rotation axis, and Y completes the RHCS.
+        The normal GEI coordinate system changes slowly in time, owing to the
+        effects of astronomical precession and the nutation of the Earth's rotation
+        axis. Strict observance of the epoch-of-date inertial system is necessary
+        for accurate calculations. Hapgood (1995) describes how the transformations
+        should be adjusted to take account of this time dependence of the GEI system.
+
+GEO     The Geographic (GEO) coordinate system:
+    The Z GEO axis coincides with the Earth's rotation axis,
+    The X GEO axis is the Greenwich meridian,
+    The Y GEO completes a RHCS.
+
+GMST    Greenwich Mean Sidereal Time is the angle, measured from the observer's
+        meridian, along the celestial equator, to the great circle that passes
+        through the point of the last vernal equinox and both poles, and is
+        usually expressed in decimal hours or hours, minutes, and seconds.
+        The celestial equator is a projection of the terrestrial equator into space.
+        An equinox occurs when Earth's tilt axis is aligned with the center of the
+        Sun. At that instant, Earth inclines neither toward nor away from the center
+        of the Sun.
+
+GSE     The Geocentric Solar Ecliptic System (GSE) has its x-axis pointing
+        from Earth toward the sun, its z-axis perpendicular to, and positive
+        upward out of, the ecliptic plane, and its y-axis chosen to complete
+        a RHCS.
+
+GSM     The Geocentric Solar Magnetospheric System (GSM) has its x-axis
+        pointing from Earth toward the sun, its z-axis perpendicular to GSMx
+        and lying in the plane containing the x-axis and the geomagnetic dipole,
+        and its y-axis perpendicular to Earth's magnetic dipole, completing
+        a RHCS. The positive GSM z-axis, which can also be described as a
+        projection of the dipole on the GSE yz-plane, has the same sense as GSE.
+        GSM differs from GSE by a coordinate rotation about the x-axis.
+
+GSMz angle to GSEz
+        This angle twixt GSMz and GSEz is positive when GSMz is tilted toward
+        the positive GSE y-axis. See dipole_tilt_angle ().
+
+IGRF    International Geomagnetic Reference Field
+
+MAG     The Geomagnetic Coordinate system (MAG) is defined so that its z-axis
+        is coincident with the magnetic dipole axis. The y-axis of this system is
+        perpendicular to the geographic poles, that is, it lies in Earth's
+        equatorial plane, such that if D is the positive dipole direction vector
+        in GEI and S is the south pole direction vector in GEI, then Y = D x S.
+        Finally, the x-axis completes a RHCS. This coordinate system is similar
+        to GSM, but with positive MAGz pointing below the solar ecliptic plane,
+        and MAGz coincident with the magnetic dipole axis.
+
+MJD     Modified Julian Date is the number of WHOLE days since
+        1858-11-17T00:00:00Z.
+
+Proleptic Gregorian calendar
+        Produced by extending the Gregorian calendar to dates preceding its
+        official introduction in 1582. A calendar obtained by extension earlier
+        in time than its invention or implementation is called the proleptic
+        version of the calendar.
+
+Proleptic Julian calendar
+        Produced by extending the Julian calendar to dates preceding AD 4 when
+        the quadrennial leap year stabilized. The leap years that were actually
+        observed between the implementation of the Julian calendar in 45 BC and
+        AD 4 were erratic. See proleptic Gregorian calendar.
+
+Rotation matrix
+        In each 3x3 rotation matrix, the terms in the rows of the matrix are
+        the unit vector components of the new principal axes in expressed in
+        the old coordinate system; for example, the x-axis of the new coordinate
+        system, expressed as a unit vector in the old coordinate system, is simply
+        the first row vector if the rotation matrix. The convention used here is
+        that rotations are CW positive. This convention rotates VECTORS from one
+        coordinate system to another.
+
+RHCS    Right-handed coordinate system.
+
+The Solar Magnetic (SM) coordinate system:
+    The Z SM axis coincides with the geomagnetic dipole axis,
+    The XZ SM plane contains the Earth-Sun direction,
+    The Y SM completes a RHCS.
+
+UTC     Coordinated Universal Time, expressed (here) in decimal hours, or
+        ISO 8601-2004 format.
+
+References
+http://aa.usno.navy.mil/data/docs/JulianDate.php
+http://articles.adsabs.harvard.edu/full/1983IAPPP..13...16F
+http://en.wikipedia.org/wiki/Julian_day
+http://www.cs.utsa.edu/~cs1063/projects/Spring2011/Project1/jdn-explanation.html
+http://www-ssc.igpp.ucla.edu/personnel/russell/papers/gct1.html/

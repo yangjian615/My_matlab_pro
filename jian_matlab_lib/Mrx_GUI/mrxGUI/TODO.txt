@@ -1,0 +1,15 @@
+===== reconGUI todo list =====
+
+=== bugs ===
+
+=== planned features ===
+
+=== wishlist ===
+
+ * animation feature?
+ * button to dump viewed data to workspace
+ * click anywhere on time trace to see 2D data from there
+ * display list of attributes and settings
+ * click anywhere on 2D plot to see raw data for that point (potentially useful for diagnostics issues)
+
+=== technical todo ===

@@ -1,0 +1,112 @@
+function [latitude, longitude,altitude] = igrftracetoalt(gh, lat_start, ...
+    lon_start, alt_start, coord, alt_end, tracedir, steplen)
+
+% IGRFTRACETOALT Trace IGRF magnetic field line until a specified altitude;
+% return lat and lon of footprint
+%
+% Usage: [LATITUDE, LONGITUDE] = IGRFTRACETOALT(TIME, LAT_START,
+%           LON_START, ALT_START, COORD, ALT_END)
+%
+% Gives the coordinates of the magnetic field line starting at a given
+% latitude, longitude, and altitude. A total of NSTEPS points on the field
+% line over a distance DISTANCE are given. Steps are 10 km. The input coordinates can either be in the geocentric or
+% geodetic (default) system (specified by COORD), and the output will be in
+% the same system as the input.
+%
+% This function relies on having the file igrfcoefs.mat in the MATLAB
+% path to function properly when a time is input. If this file cannot be
+% found, this function will try to create it by calling GETIGRFCOEFS.
+%
+% Inputs:
+%   -TIME: Time to get the magnetic field line coordinates in MATLAB serial
+%   date number format or a string that can be converted into MATLAB serial
+%   date number format using DATENUM with no format specified (see
+%   documentation of DATENUM for more information).
+%   -LAT_START: Starting point geocentric or geodetic latitude in degrees.
+%   -LON_START: Starting point geocentric or geodetic longitude in degrees.
+%   -ALT_START: For geodetic coordiates, the starting height in km above
+%   the Earth's surface. For geocentric coordiates, the starting radius in
+%   km from the center of the Earth.
+%   -COORD: String specifying the coordinate system to use. Either
+%   'geocentric' or 'geodetic' (optional, default is geodetic).
+%   -ALT_END: Duh
+%
+% Outputs:
+%   -LATITUDE: Column vector of the geocentric or geodetic latitudes in
+%   degrees of the NSTEPS+1 points along the magnetic field line.
+%   -LONGITUDE: Column vector of the geocentric or geodetic longitudes in
+%   degrees of the NSTEPS+1 points along the magnetic field line.
+%
+%
+% See also: IGRF, GETIGRFCOEFS, LOADIGRFCOEFS, DATENUM.
+
+narginchk(8, 8);
+
+% Length of each step is steplen; if going south, needs to be negative
+if strcmpi(tracedir, 'S')
+    steplen = -steplen;
+end
+
+% Convert from geodetic coordinates to geocentric coordinates if necessary.
+% The coordinate system used here is spherical coordinates (r,phi,theta)
+% corresponding to radius, azimuth, and elevation, respectively.
+if isempty(coord) || strcmpi(coord, 'geodetic') || ...
+        strcmpi(coord, 'geod') || strcmpi(coord, 'gd')
+    % First convert to ECEF, then convert to spherical. The function
+    % geod2ecef assumes meters, but we use km here.
+    [x, y, z] = geod2ecef(lat_start, lon_start, alt_start*1e3);
+    [phi, theta, r] = cart2sph(x, y, z); r = r/1e3;
+elseif strcmpi(coord, 'geocentric') || strcmpi(coord, 'geoc') || ...
+        strcmpi(coord, 'gc')
+    r = alt_start;
+    phi = lon_start*pi/180;
+    theta = lat_start*pi/180;
+else
+    error('igrfline:coordInputInvalid', ['Unrecognized command ' coord ...
+        ' for COORD input.']);
+end
+
+% set up latitute, longitude, and altitute at output
+latitude = lat_start;
+longitude = lon_start;
+altitude = alt_start;
+
+while (altitude > alt_end)
+    %disp('I''m in');
+    % Get magnetic field at this point. Note that IGRF outputs the
+    % Northward (x), Eastward (y), and Downward (z) components, but we want
+    % the radial (-z), azimuthal (y), and elevation (x) components
+    % corresponding to (r,phi,theta), respectively.
+    [Bt, Bp, Br] = igrf(gh, theta*180/pi, phi*180/pi, ...
+        r, 'geoc'); Br = -Br;
+    B = hypot(Br, hypot(Bp, Bt));
+    
+    % Unit vector in the (r,phi,theta) direction:
+    dr = Br/B; dp = Bp/B; dt = Bt/B;
+    
+    % The next point is steplen km from the previous point in the direction
+    % of the unit vector just found above.
+    newr = r + steplen*dr;
+    newtheta = theta + steplen*dt/r;
+    newphi = phi + steplen*dp/(r*cos(theta));
+    
+    
+    % Convert the field line to the proper coordinate system.
+    if isempty(coord) || strcmpi(coord, 'geodetic') || ...
+            strcmpi(coord, 'geod') || strcmpi(coord, 'gd')
+        % First convert to ECEF, then geodetic. The function ecef2geod assumes
+        % meters, but we want km here.
+        [x, y, z] = sph2cart(newphi, newtheta, newr*1e3);
+        [latitude, longitude, altitude] = ecef2geod(x, y, z);
+        altitude = altitude/1e3;
+    else
+        latitude = newtheta*180/pi;
+        longitude = newphi*180/pi;
+        altitude = newr;
+    end
+    
+    theta = newtheta;
+    phi = newphi;
+    r = newr;
+    
+end

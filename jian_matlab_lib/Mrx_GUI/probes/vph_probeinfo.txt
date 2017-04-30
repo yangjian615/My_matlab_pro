@@ -1,0 +1,7 @@
+vph_Rph=-1
+vph_Yph=-1
+vph_Zph=1
+vph_Refpol=1
+vph_Rpol=1
+vph_Ypol=-1
+vph_Zpol=1

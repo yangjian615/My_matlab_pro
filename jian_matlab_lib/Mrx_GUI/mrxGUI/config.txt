@@ -1,0 +1,16 @@
+basePath=Y:\mrxdata\
+dataPath=Y:\mrxdata\ProcessedDataFiles\
+dbPath=Y:\mrxdata\shotdb.mat
+flucdbPath=Y:\mrxdata\flucdb.mat
+flucPath=Y:\mrxdata\ProcessedDataFiles\flucprobe_signals.mat
+waveletPath=Y:\mrxdata\wavelets\
+highGfLangDataPath1=Y:\mrxdata\highGfLpData_1.mat
+highGfLangDataPath2=Y:\mrxdata\highGfLpData_2.mat
+highGfLangDataPath3=Y:\mrxdata\highGfLpData_3.mat
+highGfLangDataPath4=Y:\mrxdata\highGfLpData_4.mat
+highGfLangDataPath5=Y:\mrxdata\highGfLpData_5.mat
+highGfFlucDataPath1=Y:\mrxdata\highGfFlucData.mat
+highGfFlucDataPath2=Y:\mrxdata\highGfFlucData_2.mat
+highGfFlucDataPath3=Y:\mrxdata\highGfFlucData_3.mat
+highGfFlucDataPath4=Y:\mrxdata\highGfFlucData_4.mat
+highGfFlucDataPath5=Y:\mrxdata\highGfFlucData_5.mat
