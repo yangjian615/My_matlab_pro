@@ -44,5 +44,8 @@ Contents:
                UniGUI: Params = eqn_paramLoader('config.txt');缺少config.txt
                
                Diff-Coeffs-master:得到平均的小波变换power用来计算扩散系数
-               
-  
+    grinsted-wavelet-coherence: 小波变化
+%   continuous wavelet transform (CWT), Cross wavelet transform (XWT)
+%   and Wavelet Coherence (WTC) plots of your own data.
+              wtcdemo.m
+              wavetest.m
