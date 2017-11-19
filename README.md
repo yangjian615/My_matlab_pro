@@ -49,3 +49,17 @@ Contents:
 %   and Wavelet Coherence (WTC) plots of your own data.
               wtcdemo.m
               wavetest.m
+    Higher Order Spectral Analysis toolkit:(HOSA) Toolbox
+    
+    安装说明:https://cn.mathworks.com/matlabcentral/fileexchange/3013-hosa-higher-order-spectral-analysis-toolbox
+    Common installation issues with HOSA Toolbox
+    Issue 1: All .m files are uppercase 
+    Solution: Rename .m files to lowercase. See Stefano Tronci's post (25 Jul 2015) if using Linux.
+    Issue 2: HOSA Demo does not work  : for the choice.m-file problem: 
+    https://cn.mathworks.com/matlabcentral/fileexchange/36084-choices?focused=5229533&tab=function 
+    
+        hosahelp  will give one-line syntax for all the toolbox mfiles.
+        help hosa will give a functional descrption of the toolbox mfiles.
+        hosademo  will run the HOSA toolbox demo. 
+        hosadem.m
+        hosademo.m
