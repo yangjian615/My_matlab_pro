@@ -1,0 +1,2608 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>fte_gui</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-24"><meta name="DC.source" content="fte_gui.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="keyword">function</span> varargout = fte_gui(varargin)
+<span class="comment">% fte_gui MATLAB code for fte_gui.fig</span>
+<span class="comment">%      fte_gui, by itself, creates a new fte_gui or raises the existing</span>
+<span class="comment">%      singleton*.</span>
+<span class="comment">%</span>
+<span class="comment">%      H = fte_gui returns the handle to a new fte_gui or the handle to</span>
+<span class="comment">%      the existing singleton*.</span>
+<span class="comment">%</span>
+<span class="comment">%      fte_gui('CALLBACK',hObject,eventData,handles,...) calls the local</span>
+<span class="comment">%      function named CALLBACK in fte_gui.M with the given input arguments.</span>
+<span class="comment">%</span>
+<span class="comment">%      fte_gui('Property','Value',...) creates a new fte_gui or raises the</span>
+<span class="comment">%      existing singleton*.  Starting from the left, property value pairs are</span>
+<span class="comment">%      applied to the GUI before fte_gui_OpeningFcn gets called.  An</span>
+<span class="comment">%      unrecognized property name or invalid value makes property application</span>
+<span class="comment">%      stop.  All inputs are passed to fte_gui_OpeningFcn via varargin.</span>
+<span class="comment">%</span>
+<span class="comment">%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one</span>
+<span class="comment">%      instance to run (singleton)".</span>
+<span class="comment">%</span>
+<span class="comment">% See also: GUIDE, GUIDATA, GUIHANDLES</span>
+
+<span class="comment">% Edit the above text to modify the response to help fte_gui</span>
+
+<span class="comment">% Last Modified by GUIDE v2.5 09-Jun-2012 02:06:10</span>
+
+<span class="comment">% Begin initialization code - DO NOT EDIT</span>
+gui_Singleton = 1;
+gui_State = struct(<span class="string">'gui_Name'</span>,       mfilename, <span class="keyword">...</span>
+                   <span class="string">'gui_Singleton'</span>,  gui_Singleton, <span class="keyword">...</span>
+                   <span class="string">'gui_OpeningFcn'</span>, @fte_gui_OpeningFcn, <span class="keyword">...</span>
+                   <span class="string">'gui_OutputFcn'</span>,  @fte_gui_OutputFcn, <span class="keyword">...</span>
+                   <span class="string">'gui_LayoutFcn'</span>,  [] , <span class="keyword">...</span>
+                   <span class="string">'gui_Callback'</span>,   []);
+<span class="keyword">if</span> nargin &amp;&amp; ischar(varargin{1})
+    gui_State.gui_Callback = str2func(varargin{1});
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> nargout
+    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+<span class="keyword">else</span>
+    gui_mainfcn(gui_State, varargin{:});
+<span class="keyword">end</span>
+<span class="comment">% End initialization code - DO NOT EDIT</span>
+
+
+<span class="comment">% --- Executes just before fte_gui is made visible.</span>
+<span class="keyword">function</span> fte_gui_OpeningFcn(hObject, eventdata, handles, varargin)
+<span class="comment">% This function has no output args, see OutputFcn.</span>
+<span class="comment">% hObject    handle to figure</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+<span class="comment">% varargin   command line arguments to fte_gui (see VARARGIN)</span>
+
+<span class="comment">% Choose default command line output for fte_gui</span>
+handles.output = hObject;
+
+handles.nden=1e6;         <span class="comment">%factor for density</span>
+handles.nt  =1e6;         <span class="comment">%factor for temperature</span>
+handles.nv  =1e3;         <span class="comment">%factor for velocity</span>
+handles.nb  =1e-9;        <span class="comment">%factor for magnetic field (nT to T)</span>
+handles.kb  =1.38*1e-23;  <span class="comment">%Boltzmann's constant</span>
+handles.kb2 = 8.61739*1e-5;   <span class="comment">% Boltzmann's constant (eV/K);</span>
+handles.miu =4.0*pi*1e-7; <span class="comment">%permeability</span>
+handles.mp  =1.67*1e-27;  <span class="comment">%proton mass</span>
+handles.tcf = 24*3600.;   <span class="comment">%time conversion factor</span>
+handles.dhead = 1;
+
+disp([<span class="string">'handles.nden from OpenFcn='</span>,num2str(handles.nden)])
+disp([<span class="string">'handles.nt from OpenFcn='</span>,num2str(handles.nt)])
+disp([<span class="string">'handles.nv from OpenFcn='</span>,num2str(handles.nv)])
+disp([<span class="string">'handles.nb from OpenFcn='</span>,num2str(handles.nb)])
+disp([<span class="string">'handles.kb from OpenFcn='</span>,num2str(handles.kb)])
+disp([<span class="string">'handles.kb2 from OpenFcn='</span>,num2str(handles.kb2)])
+disp([<span class="string">'handles.miu from OpenFcn='</span>,num2str(handles.miu)])
+disp([<span class="string">'handles.mp from OpenFcn='</span>,num2str(handles.mp)])
+disp([<span class="string">'handles.tcf from OpenFcn='</span>,num2str(handles.tcf)])
+disp([<span class="string">'handles.dhead from OpenFcn='</span>,num2str(handles.dhead)])
+<span class="comment">% Update handles structure</span>
+
+guidata(hObject, handles);
+
+<span class="comment">% UIWAIT makes fte_gui wait for user response (see UIRESUME)</span>
+<span class="comment">% uiwait(handles.fig1);</span>
+
+
+<span class="comment">% --- Outputs from this function are returned to the command line.</span>
+<span class="keyword">function</span> varargout = fte_gui_OutputFcn(hObject, eventdata, handles)
+<span class="comment">% varargout  cell array for returning output args (see VARARGOUT);</span>
+<span class="comment">% hObject    handle to figure</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+
+<span class="comment">% Get default command line output from handles structure</span>
+varargout{1} = handles.output;
+
+<span class="keyword">function</span> btn_dphiup_Callback(hObject, eventdata, handles)
+handles.dphi=handles.dphi+handles.azi;
+set(uicontrol(handles.txt_dphi),<span class="string">'String'</span>,num2str(handles.dphi));
+set(handles.etxt_dphi,<span class="string">'String'</span>,num2str(handles.dphi));
+guidata(hObject, handles);
+
+<span class="keyword">function</span> btn_dphidn_Callback(hObject, eventdata, handles)
+handles.dphi=handles.dphi-handles.azi;
+set(uicontrol(handles.txt_dphi),<span class="string">'String'</span>,num2str(handles.dphi));
+set(handles.etxt_dphi,<span class="string">'String'</span>,num2str(handles.dphi));
+guidata(hObject, handles);
+
+<span class="keyword">function</span> btn_dthetaup_Callback(hObject, eventdata, handles)
+handles.dtheta=handles.dtheta+handles.pol;
+set(uicontrol(handles.txt_dtheta),<span class="string">'String'</span>,num2str(handles.dtheta));
+set(handles.etxt_dtheta,<span class="string">'String'</span>,num2str(handles.dtheta));
+guidata(hObject, handles);
+
+<span class="keyword">function</span> btn_dthetadn_Callback(hObject, eventdata, handles)
+handles.dtheta=handles.dtheta-handles.pol;
+set(uicontrol(handles.txt_dtheta),<span class="string">'String'</span>,num2str(handles.dtheta));
+set(handles.etxt_dtheta,<span class="string">'String'</span>,num2str(handles.dtheta));
+guidata(hObject, handles);
+
+<span class="keyword">function</span> btn_svpoly_Callback(hObject, eventdata, handles)
+    <span class="comment">% Just need to do polycalc/polyplot, but local for saves</span>
+    <span class="comment">% i.e. don't overwrite handles with anything here, just use</span>
+    <span class="comment">% handles for input data.</span>
+    polylocal.amax1=max(handles.An);
+    polylocal.amin1=min(handles.An);
+    polylocal.ax1=polylocal.amin1:0.01:polylocal.amax1;
+    polylocal.df1=polyder(handles.fS1); <span class="comment">%dPt/dA        % derivative of the fit</span>
+    polylocal.yys1=polyval(handles.fS1,handles.ax1);           <span class="comment">% value of the function f1</span>
+    polylocal.yyz1=polyval(handles.fZ1,handles.ax1);
+    fpos = [1 1 100 20];
+    polyprintfig = figure(<span class="string">'units'</span>, <span class="string">'characters'</span>, <span class="string">'position'</span>,fpos);
+    polyprintaxes = axes(<span class="string">'units'</span>,<span class="string">'characters'</span>,<span class="string">'NextPlot'</span>,<span class="string">'replace'</span>,<span class="string">'ylim'</span>,<span class="keyword">...</span>
+        [min(handles.pbz)-0.1 max(handles.pbz)+0.1],<span class="string">'ytick'</span>,[0:0.1:1],<span class="string">'fontsize'</span>,8);
+    plot(polyprintaxes,handles.An,handles.pbz,<span class="string">'ko'</span>,<span class="string">'Markersize'</span>,5); grid <span class="string">on</span>;
+    set(polyprintaxes,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>);
+    plot(polyprintaxes,polylocal.ax1,polylocal.yys1,<span class="string">'color'</span>,[0.5 0.5 0.5],<span class="string">'linewidth'</span>,3);
+
+    ylabel(polyprintaxes,<span class="string">'Pt'</span>,<span class="string">'rotation'</span>,0);
+    xlabel(polyprintaxes,<span class="string">'A/A0'</span>);
+<span class="comment">%     f = get(handles.axes1,'position');</span>
+<span class="comment">%     o = get(handles.axes1,'outerposition');</span>
+<span class="comment">%     go = get(gca,'outerposition');</span>
+<span class="comment">%     f2loc = [f(1) f(2) f(3)/2 f(4)];</span>
+<span class="comment">%     uns = get(gcf, 'units');</span>
+<span class="comment">%     apos = [20 20 f2loc(3) f2loc(4)];</span>
+<span class="comment">% ____Location Section (if needed)_________________________________________</span>
+    yax = get(polyprintaxes,<span class="string">'ylim'</span>);
+    top = max(yax);
+    bot = min(yax);
+    xax = get(polyprintaxes,<span class="string">'xlim'</span>);
+    lef = min(xax);
+    rit = max(xax);
+    mvup = top+0.03*top;
+    mvdn = bot-0.03*bot;
+    mvlf = lef-0.03*lef;
+    mvrt = rit+0.03*rit;
+
+    <span class="comment">% Header Section (if Stefan Wants)_____________________________________</span>
+    usc = upper(handles.sc);
+    time_a = datestr(handles.fdna);
+    time_b = datestr(handles.fdnb);
+    dte = datestr(handles.fdna);
+    polyhead = [<span class="string">'TH'</span>,usc,<span class="string">' '</span>, dte(1:11), <span class="string">' '</span>,time_a(13:20),<span class="string">' to '</span>,time_b(13:20),<span class="keyword">...</span>
+        <span class="string">' Theta='</span>,num2str(handles.theta,<span class="string">'%3.1f'</span>),<span class="keyword">...</span>
+        <span class="string">' Phi='</span>, num2str(handles.phi,<span class="string">'%3.1f'</span>),<span class="string">' w:'</span>, num2str(handles.w), <span class="keyword">...</span>
+        <span class="string">' ny:'</span>, num2str(handles.ny)];
+    text(lef,mvup,[polyhead],<span class="string">'Fontname'</span>,<span class="string">'arial'</span>,<span class="string">'Fontsize'</span>,10,<span class="keyword">...</span>
+        <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>,<span class="string">'HorizontalAlignment'</span>,<span class="string">'left'</span>);
+    disp(<span class="string">''</span>);
+    <span class="comment">%______________________________________________________________________</span>
+<span class="comment">%__________________________________________________________________________</span>
+
+
+
+    thnm = num2str(round(handles.theta));
+    phnm = num2str(round(handles.phi));
+    tmnm1 = datestr(handles.ta);
+    tmnm2 = datestr(handles.tb);
+    dnm = num2str([handles.yr,handles.month,handles.day]);
+    filename = [handles.dir,<span class="string">'gsmap_'</span>,<span class="string">'th'</span>,handles.sc,<span class="string">'_'</span>,dnm,<span class="string">'_'</span>,<span class="keyword">...</span>
+        tmnm1(13:14),tmnm1(16:17),tmnm1(19:20),<span class="string">'_'</span>,tmnm2(13:14),<span class="keyword">...</span>
+        tmnm2(16:17),tmnm2(19:20),<span class="string">'_theta'</span>,thnm,<span class="string">'_phi'</span>,<span class="keyword">...</span>
+        phnm,<span class="string">'_poly'</span>,<span class="string">'.png'</span>];
+    print(polyprintfig,<span class="string">'-dpng'</span>,filename,<span class="string">'-r600'</span>);
+    disp([<span class="string">'File saved as '</span>, filename])
+    close(polyprintfig);
+
+<span class="keyword">function</span> btn_save_Callback(hObject, eventdata, handles)
+    handles = plot_data_calc(hObject,eventdata,handles); <span class="comment">% plots values we'll need</span>
+    figpos = [1, 1, 800,600];
+    fig2=figure(<span class="string">'Name'</span>, <span class="string">'fig2'</span>,<span class="string">'Position'</span>,figpos,<span class="string">'NumberTitle'</span>,<span class="string">'on'</span>, <span class="string">'Renderer'</span>, <span class="string">'Zbuffer'</span>,<span class="string">'RendererMode'</span>,<span class="string">'manual'</span>);
+    set(gca,<span class="string">'NextPlot'</span>,<span class="string">'replace'</span>);
+    usc = upper(handles.sc);
+    time_a = datestr(handles.fdna);
+    time_b = datestr(handles.fdnb);
+    dte = datestr(handles.fdna);
+    heada = [<span class="string">'TH'</span>,usc,<span class="string">' '</span>, dte(1:11), <span class="string">' '</span>,time_a(13:20),<span class="string">' to '</span>,time_b(13:20),<span class="keyword">...</span>
+        <span class="string">' Theta='</span>,num2str(handles.theta,<span class="string">'%3.1f'</span>),<span class="keyword">...</span>
+        <span class="string">' Phi='</span>, num2str(handles.phi,<span class="string">'%3.1f'</span>),<span class="string">' w:'</span>, num2str(handles.w), <span class="keyword">...</span>
+        <span class="string">' ny:'</span>, num2str(handles.ny)];
+    <span class="comment">%headb = strcat('FTE stop: ',datestr(handles.fdnb), ...</span>
+    <span class="comment">%    ', sc:', handles.sc, ', src:', handles.src);</span>
+    pcolor(handles.x*handles.L0,handles.y(handles.gg)*handles.L0,handles.B3);            <span class="comment">% displays 3rd axis (bz) in faceted shading</span>
+    shading <span class="string">interp</span>                       <span class="comment">% changes shading to interpolated</span>
+    minb3=min(min(handles.B3));
+    maxb3=max(max(handles.B3));
+    caxis([minb3 maxb3]);
+    zbar=colorbar(<span class="string">'vertical'</span>);
+    set(zbar,<span class="string">'Fontsize'</span>,8);
+    set(get(zbar,<span class="string">'XLabel'</span>),<span class="string">'String'</span>,<span class="string">'Bz [nT]'</span>,<span class="string">'Rotation'</span>,0,<span class="keyword">...</span>
+        <span class="string">'HorizontalAlignment'</span>,<span class="string">'left'</span>,<span class="string">'Fontsize'</span>,10);
+    hold <span class="string">on</span>;
+    [cc,hh]=contour(handles.x*handles.L0,handles.y(handles.gg)*<span class="keyword">...</span>
+        handles.L0,handles.Aup(handles.gg,:),[-4:0.11:4],<span class="string">'k'</span>);
+    set(hh,<span class="string">'linewidth'</span>,1.0);
+    u = handles.xa0;
+    v = zeros(1,handles.ndata);
+    x = handles.bxs';
+    y = handles.bys';
+    scale = 0.3;
+    color = <span class="string">'w'</span>;
+    quiv1=quiver(u,v,x,y,scale,color);  <span class="comment">% plots white arrows accross middle.</span>
+    set(quiv1,<span class="string">'linewidth'</span>,1.5);                          <span class="comment">% sets linewidth for quiver arrows</span>
+    set(gca,<span class="string">'fontsize'</span>,10,<span class="string">'TickDir'</span>,<span class="string">'out'</span>,<span class="string">'linewidth'</span>,1.0);
+    axis <span class="string">equal</span>
+    xdist = handles.x*handles.L0;
+    <span class="comment">% fudge factor for x range.</span>
+    <span class="keyword">if</span> xdist &lt;= 0
+      axis([min(handles.x*handles.L0), 0, min(handles.y*handles.L0), max(handles.y*handles.L0)])
+    <span class="keyword">else</span>
+      axis([0, max(handles.x*handles.L0), min(handles.y*handles.L0), max(handles.y*handles.L0)])
+    <span class="keyword">end</span>
+    xlabel(gca,<span class="string">'x[km]'</span>);
+    ylabel(gca,<span class="string">'y[km]'</span>);
+    thnm = num2str(round(handles.theta));
+    phnm = num2str(round(handles.phi));
+    tmnm1 = datestr(handles.ta);
+    tmnm2 = datestr(handles.tb);
+    dnm = num2str([handles.yr,handles.month,handles.day]);
+    top = max(handles.y*handles.L0);
+    bot = min(handles.y*handles.L0);
+    lef = min(handles.x*handles.L0);
+    rit = max(handles.x*handles.L0);
+    up = 105;
+    down = 100;
+    left = -650;
+    hspace = 450;
+    vspace = 200;
+    r1 = 2*vspace+down;
+    r2 = 3*vspace+down;
+    r3 = 4*vspace+down;
+    r4 = 5*vspace+down;
+    c1 = 1*hspace+left;
+    c2 = 2*hspace+left;
+    c3 = 3*hspace+left;
+    c4 = 4*hspace+left;
+    c5 = 5*hspace+left;
+    text(lef+c1,bot-r2,<span class="string">'x:'</span>, <span class="string">'Fontsize'</span>, 12, <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="keyword">...</span>
+        <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c1,bot-r3,<span class="string">'y:'</span>, <span class="string">'Fontsize'</span>, 12, <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="keyword">...</span>
+        <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c1,bot-r4,<span class="string">'z:'</span>, <span class="string">'Fontsize'</span>, 12, <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="keyword">...</span>
+        <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c2,bot-r1,<span class="string">'xs'</span>, <span class="string">'Fontsize'</span>, 12, <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="keyword">...</span>
+        <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>, <span class="string">'FontWeight'</span>, <span class="string">'Bold'</span>, <span class="string">'Fontangle'</span>, <span class="string">'italic'</span>);
+    text(lef+c3,bot-r1,<span class="string">'ys'</span>, <span class="string">'Fontsize'</span>, 12, <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="keyword">...</span>
+        <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>, <span class="string">'FontWeight'</span>, <span class="string">'Bold'</span>, <span class="string">'Fontangle'</span>, <span class="string">'italic'</span>);
+    text(lef+c4,bot-r1,<span class="string">'zs'</span>, <span class="string">'Fontsize'</span>, 12, <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="keyword">...</span>
+        <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>, <span class="string">'FontWeight'</span>, <span class="string">'Bold'</span>, <span class="string">'Fontangle'</span>, <span class="string">'italic'</span>);
+    text(lef+c5,bot-r1,<span class="string">'V0'</span>, <span class="string">'Fontsize'</span>, 12, <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="keyword">...</span>
+        <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>, <span class="string">'FontWeight'</span>, <span class="string">'Bold'</span>, <span class="string">'Fontangle'</span>, <span class="string">'italic'</span>);
+    text(lef+c2,bot-r2,num2str(handles.xs(1),<span class="string">'%1.3f'</span>), <span class="string">'Fontsize'</span>, 10, <span class="keyword">...</span>
+        <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c2,bot-r3,num2str(handles.xs(2),<span class="string">'%1.3f'</span>), <span class="string">'Fontsize'</span>, 10, <span class="keyword">...</span>
+        <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c2,bot-r4,num2str(handles.xs(3),<span class="string">'%1.3f'</span>), <span class="string">'Fontsize'</span>, 10, <span class="keyword">...</span>
+        <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c3,bot-r2,num2str(handles.ys(1),<span class="string">'%1.3f'</span>), <span class="string">'Fontsize'</span>, 10, <span class="keyword">...</span>
+        <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c3,bot-r3,num2str(handles.ys(2),<span class="string">'%1.3f'</span>), <span class="string">'Fontsize'</span>, 10, <span class="keyword">...</span>
+        <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c3,bot-r4,num2str(handles.ys(3),<span class="string">'%1.3f'</span>), <span class="string">'Fontsize'</span>, 10, <span class="keyword">...</span>
+        <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c4,bot-r2,num2str(handles.zs(1),<span class="string">'%1.3f'</span>), <span class="string">'Fontsize'</span>, 10, <span class="keyword">...</span>
+        <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c4,bot-r3,num2str(handles.zs(2),<span class="string">'%1.3f'</span>), <span class="string">'Fontsize'</span>, 10, <span class="keyword">...</span>
+        <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c4,bot-r4,num2str(handles.zs(3),<span class="string">'%1.3f'</span>), <span class="string">'Fontsize'</span>, 10, <span class="keyword">...</span>
+        <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c5,bot-r2,num2str(handles.V0(1),<span class="string">'%3.1f'</span>), <span class="string">'Fontsize'</span>, 10, <span class="keyword">...</span>
+        <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c5,bot-r3,num2str(handles.V0(2),<span class="string">'%3.1f'</span>), <span class="string">'Fontsize'</span>, 10, <span class="keyword">...</span>
+        <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef+c5,bot-r4,num2str(handles.V0(3),<span class="string">'%3.1f'</span>), <span class="string">'Fontsize'</span>, 10, <span class="keyword">...</span>
+        <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'right'</span>);
+    text(lef,top+(top*0.17),[heada],<span class="string">'Fontname'</span>,<span class="string">'arial'</span>,<span class="string">'Fontsize'</span>,<span class="keyword">...</span>
+        10,<span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>,<span class="string">'HorizontalAlignment'</span>,<span class="string">'left'</span>);
+    <span class="comment">%text(lef,top+(top*0.15),[heada],'Fontname','arial','Fontsize',...</span>
+    <span class="comment">%    10,'BackgroundColor','w','HorizontalAlignment','left');</span>
+    minb3=min(min(handles.B3));
+    maxb3=max(max(handles.B3));
+    caxis([minb3 maxb3]);
+    handles.zbar=colorbar(<span class="string">'vertical'</span>);
+    set(handles.zbar,<span class="string">'Fontsize'</span>,8);
+    set(get(handles.zbar,<span class="string">'XLabel'</span>),<span class="string">'String'</span>,<span class="string">'Bz [nT]'</span>,<span class="string">'Rotation'</span>,0,<span class="keyword">...</span>
+        <span class="string">'HorizontalAlignment'</span>,<span class="string">'left'</span>,<span class="string">'Fontsize'</span>,10);
+    filename = [handles.dir,<span class="string">'gsmap_'</span>,<span class="string">'th'</span>,handles.sc,<span class="string">'_'</span>,dnm,<span class="string">'_'</span>,<span class="keyword">...</span>
+        tmnm1(13:14),tmnm1(16:17),tmnm1(19:20),<span class="string">'_'</span>,tmnm2(13:14), <span class="keyword">...</span>
+        tmnm2(16:17),tmnm2(19:20),<span class="string">'_theta'</span>,thnm,<span class="string">'_phi'</span>,phnm,<span class="string">'.png'</span>];
+    print(gcf,<span class="string">'-dpng'</span>,filename,<span class="string">'-r600'</span>);
+    disp([<span class="string">'File saved as '</span>, filename])
+    close(gcf);
+
+<span class="keyword">function</span> btn_load_Callback(hObject, eventdata, handles)
+
+
+    <span class="keyword">if</span> isfield(handles,<span class="string">'etxt_w'</span>) == 0
+      handles=catstruct(handles,guihandles);
+    <span class="keyword">end</span>
+    guidata(hObject, handles);
+
+    <span class="keyword">if</span> isfield(handles, <span class="string">'dhead'</span>) == 0
+      handles.nden=1e6;         <span class="comment">%factor for density</span>
+      handles.nt  =1e6;         <span class="comment">%factor for temperature</span>
+      handles.nv  =1e3;         <span class="comment">%factor for velocity</span>
+      handles.nb  =1e-9;        <span class="comment">%factor for magnetic field</span>
+      handles.kb  =1.38*1e-23;  <span class="comment">%Boltzmann's constant</span>
+      handles.kb2 = 8.61739*1e-5;   <span class="comment">% Boltzmann's constant (eV/K);</span>
+      handles.miu =4.0*pi*1e-7; <span class="comment">%permeability</span>
+      handles.mp  =1.67*1e-27;  <span class="comment">%proton mass</span>
+      handles.tcf = 24*3600.;   <span class="comment">%time conversion factor</span>
+      handles.dhead = 1;
+
+      disp([<span class="string">'handles.nden from Load Button='</span>,num2str(handles.nden)])
+      disp([<span class="string">'handles.nt from Load Button='</span>,num2str(handles.nt)])
+      disp([<span class="string">'handles.nv from Load Button='</span>,num2str(handles.nv)])
+      disp([<span class="string">'handles.nb from Load Button='</span>,num2str(handles.nb)])
+      disp([<span class="string">'handles.kb from Load Button='</span>,num2str(handles.kb)])
+      disp([<span class="string">'handles.kb2 from Load Button='</span>,num2str(handles.kb2)])
+      disp([<span class="string">'handles.miu from Load Button='</span>,num2str(handles.miu)])
+      disp([<span class="string">'handles.mp from Load Button='</span>,num2str(handles.mp)])
+      disp([<span class="string">'handles.tcf from Load Button='</span>,num2str(handles.tcf)])
+      disp([<span class="string">'handles.dhead from Load Button='</span>,num2str(handles.dhead)])
+    <span class="keyword">end</span>
+
+
+
+    disp(<span class="string">'===========================Begin LOAD Button Data================================='</span>)
+
+    ostest = ismac;
+    <span class="keyword">if</span> ostest == 1
+        handles.dir = <span class="string">'~/dev/matlab/fte_reconstructor'</span>;
+        <span class="comment">%handles.dir = '~/dev/matlab/Version A of Matlab stuff/'</span>
+    <span class="keyword">else</span>
+      handles.dir = <span class="string">'C:\MATLAB\'</span>;
+    <span class="keyword">end</span>
+
+    HHi = sscanf(handles.ti,<span class="string">'%2c%0.2*4c'</span>);
+    MMi = sscanf(handles.ti, <span class="string">'%*3c%2c0%*2c'</span>, 2);
+    SSi = sscanf(handles.ti, <span class="string">'%*6c%2c0'</span>, 2);
+    HHf = sscanf(handles.tf,<span class="string">'%2c%0.2*4c'</span>);
+    MMf = sscanf(handles.tf, <span class="string">'%*3c%2c0%*2c'</span>, 2);
+    SSf = sscanf(handles.tf, <span class="string">'%*6c%2c0'</span>, 2);
+    <span class="comment">% File 1 data file itself %</span>
+    fn = strcat(handles.dir,<span class="string">'th'</span>,handles.sc,<span class="string">'_'</span>,num2str(strcat(handles.yr,handles.month,handles.day)),<span class="string">'_'</span>,num2str(strcat(HHi,MMi)),<span class="string">'_'</span>,num2str(strcat(HHf,MMf)),<span class="string">'_GSM_v4_'</span>,handles.src,<span class="string">'.dat'</span>);
+    disp([<span class="string">'fn is'</span>, fn])
+    handles.a = importdata(fn,<span class="string">' '</span>,handles.dhead);
+    disp([<span class="string">'handles.a is loaded.  Class(handles.a.data)  = '</span>,class(handles.a.data)])
+    disp([<span class="string">'                      Size(handles.a.data)  = '</span>, num2str(size(handles.a.data))])
+    <span class="comment">% File 2 msheath data file%</span>
+    handles.n=113;
+    fnsh=strcat(handles.dir,<span class="string">'themis_fte_iaga_2011_msheath.txt'</span>);
+    <span class="comment">%     fnsh=['/FTE/2011/findings/themis_fte_iaga_2011_msheath.txt'];</span>
+    mshfid = fopen(fnsh);
+    handles.msh = textscan(mshfid, <span class="string">'%s %s %s %s %f %s %s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f'</span>, handles.n);
+    fclose(mshfid);
+    disp([<span class="string">'handles.msh is loaded.  Class(handles.msh.data)  = '</span>,class(handles.msh)])
+    disp([<span class="string">'                      Size(handles.msh.data)  = '</span>, num2str(size(handles.msh))])
+    <span class="comment">% File 3 Event File (nev)%</span>
+    ff = strcat(handles.dir,<span class="string">'themis_fte_iaga_2011_clean_final_timeorder_recons.txt'</span>);
+    <span class="comment">%     ff='/FTE/2011/findings/themis_fte_iaga_2011_clean_final_timeorder_recons.txt';</span>
+    fid = fopen(ff);
+    handles.f = textscan(fid, <span class="string">'%2c %s %s %s %f %s %s %f %f %f'</span>, handles.n);
+    fclose(fid);
+    disp([<span class="string">'handles.f is loaded.  Class(handles.f.data)  = '</span>,class(handles.f)])
+    disp([<span class="string">'                      Size(handles.f.data)  = '</span>, num2str(size(handles.f))])
+    msh_vx = handles.msh{13}(handles.nev);
+    msh_vy = handles.msh{14}(handles.nev);
+    msh_vz = handles.msh{15}(handles.nev);
+    msh_v = [msh_vx,msh_vy,msh_vz];
+    handles.V0=msh_v;
+    handles.nV0=handles.V0/norm(handles.V0);
+    handles.xsv0 = -handles.nV0;
+    handles.secs = handles.a.data(:,1);
+    handles.BX=handles.a.data(:,2);
+    handles.BY=handles.a.data(:,3);
+    handles.BZ=handles.a.data(:,4); 	<span class="comment">% Assigns handles.BX, By, Bz (from file - GSM)</span>
+    VX=handles.a.data(:,6);
+    VY=handles.a.data(:,7);
+    VZ=handles.a.data(:,8); 	<span class="comment">% Assigns Vx, Vy, Vz (from file - (km/s(GSE))</span>
+    handles.Nx=handles.a.data(:,10); 					<span class="comment">% assigns plasma N density from file (cm^-3)</span>
+    handles.Tx=handles.a.data(:,11); 					<span class="comment">% assigns temp from file (K)</span>
+    idata=1:length(handles.BX);
+
+<span class="comment">%============%</span>
+<span class="comment">% TIME STUFF %</span>
+<span class="comment">%============%</span>
+        sdoy = strcat(num2str(handles.yr),<span class="string">'-'</span>,num2str(handles.month),<span class="string">'-'</span>,num2str(handles.day));
+        tstart = strcat(sdoy,<span class="string">'/'</span>,handles.ti);
+        tstop = strcat(sdoy,<span class="string">'/'</span>,handles.tf);
+        <span class="comment">%-------------------------------------------------%</span>
+        <span class="comment">% i &amp; f consider only the start/stop time of the  % entire data set (on the scale of</span>
+        <span class="comment">% hours)         %</span>
+        <span class="comment">%-------------------------------------------------%</span>
+        tsi = datestr(tstart, <span class="string">'mmmm/dd/yyyy HH:MM:SS:FFF'</span>);
+        tsf = datestr(tstop, <span class="string">'mmmm/dd/yyyy HH:MM:SS:FFF'</span>);
+        vtsi = datevec(tsi, <span class="string">'mmmm/dd/yyyy HH:MM:SS:FFF'</span>);
+        vtsf = datevec(tsf, <span class="string">'mmmm/dd/yyyy HH:MM:SS:FFF'</span>);
+        dni = datenum(vtsi);
+        dnf = datenum(vtsf);
+        <span class="comment">%---------------------------------%</span>
+        <span class="comment">% 1 &amp; 2 consider stop/start times % for FTE from the file or array  %</span>
+        <span class="comment">%---------------------------------%</span>
+        t1 = handles.f{2}(handles.nev);
+        t2 = handles.f{4}(handles.nev);
+        fvts1 = datevec(t1, <span class="string">'yyyy-mm-dd/HH:MM:SS'</span>);
+        fvts2 = datevec(t2, <span class="string">'yyyy-mm-dd/HH:MM:SS'</span>);
+        fdn1 = datenum(fvts1);
+        fdn2 = datenum(fvts2);
+        <span class="comment">%------------------------------------%</span>
+        <span class="comment">% a &amp; b consider adjusted FTE window % set by the user input 'w'          %</span>
+        <span class="comment">%------------------------------------%</span>
+        t1f1 = etime(fvts1,vtsi);   <span class="comment">% returns number of seconds from start of window to start of FTE</span>
+        t1f2 = etime(fvts2,vtsi);   <span class="comment">% elapsed time from start of window to stop of FTE (s)</span>
+        tstep = handles.a.data(:,1);
+        j = tstep &gt;= t1f1 &amp; tstep &lt; t1f2;
+        k = find(j);
+        ktest = numel(k);
+        <span class="keyword">if</span> ktest == 0
+            disp(<span class="string">''</span>)
+            disp(<span class="string">'________________________________________________________'</span>);
+            disp(<span class="string">'That event number (nev) does not exist for this date'</span>);
+            disp(<span class="string">'Dave needs to update the code to be less manually annoying.'</span>);
+            disp(<span class="string">'________________________________________________________'</span>);
+
+            <span class="keyword">return</span>;
+        <span class="keyword">end</span>
+        handles.w=str2double(get(handles.etxt_w,<span class="string">'String'</span>));
+        ns1 = k(1)-handles.w;                <span class="comment">% adds two data points to either side</span>
+        ns2 = k(end) + handles.w;            <span class="comment">% of FTE</span>
+        handles.i1 = ns1;
+        handles.i2 = ns2;
+        secs=handles.secs;
+        dwa = secs(ns1);
+        dwb = secs(ns2);
+        handles.fdna = addtodate(dni,dwa,<span class="string">'second'</span>);
+        handles.fdnb = addtodate(dni,dwb,<span class="string">'second'</span>);
+        disp([<span class="string">'fdna = '</span>,handles.fdna])
+        disp([<span class="string">'fdnb = '</span>,handles.fdnb])
+        handles.ta=handles.fdna;
+        handles.tb=handles.fdnb;
+<span class="comment">%================%</span>
+<span class="comment">% TIME STUFF END %</span>
+<span class="comment">%================%</span>
+    handles.bc=[handles.BX(handles.i1:handles.i2) handles.BY(handles.i1:handles.i2) handles.BZ(handles.i1:handles.i2)];				<span class="comment">% re-assigns B for some reason, should be the same as above.</span>
+    handles.bx = handles.bc(:,1);
+    handles.by = handles.bc(:,2);
+    handles.bz = handles.bc(:,3);
+    handles.ndata = numel(handles.bx);
+    handles.vp=[VX(handles.i1:handles.i2) VY(handles.i1:handles.i2) VZ(handles.i1:handles.i2)];
+    handles.lenb = length(handles.bc(:,1));
+    <span class="comment">% --- Call MVAB Function</span>
+    [Kbmax,Kbint,Kbmin,qmva,d1,d2,d3]=MVAB(handles.bc,handles.lenb);
+    handles.Kbmax=Kbmax;
+    handles.Kbint=Kbint;
+    handles.Kbmin=Kbmin;
+    handles.ztemp = handles.Kbint;      <span class="comment">%</span>
+    handles.ytemp = handles.Kbmax;      <span class="comment">%</span>
+    handles.xtemp = handles.Kbmin;      <span class="comment">% MP Normal</span>
+    handles.nxorig=handles.ztemp(1);
+    handles.nyorig=handles.ztemp(2);
+    handles.nzorig=handles.ztemp(3);
+    <span class="comment">% --- (zx0, zy0, zz0)</span>
+    disp([<span class="string">'nxorig='</span>,num2str(handles.nxorig)]);
+    disp([<span class="string">'nyorig='</span>,num2str(handles.nyorig)]);
+    disp([<span class="string">'nzorig='</span>,num2str(handles.nzorig)]);
+    handles.zs0 = [handles.nxorig, handles.nyorig, handles.nzorig];
+    handles.theta0=acosd(handles.nzorig);
+    handles.phi0=atand(abs(handles.nyorig)/abs(handles.nxorig));
+    <span class="keyword">if</span> (handles.nxorig &lt; 0.0) &amp;&amp; (handles.nyorig &gt;= 0.0);
+      handles.phi0=-handles.phi0+180;
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> (handles.nxorig &lt; 0.0) &amp;&amp; (handles.nyorig &lt; 0.0);
+      handles.phi0= handles.phi0+180;
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> (handles.nxorig &gt;= 0.0) &amp;&amp; (handles.nyorig &lt; 0.0);
+      handles.phi0=-handles.phi0+360;
+    <span class="keyword">end</span>
+
+    handles.dphi = 0.0;
+    handles.dtheta = 0.0;
+    guidata(hObject, handles);
+    set(handles.txt_dphi,<span class="string">'String'</span>,num2str(handles.dphi, <span class="string">'%3.1f'</span>));
+    set(handles.etxt_dphi,<span class="string">'String'</span>,num2str(handles.dphi, <span class="string">'%3.1f'</span>));
+    set(handles.txt_dtheta,<span class="string">'String'</span>,num2str(handles.dtheta, <span class="string">'%3.1f'</span>));
+    set(handles.etxt_dtheta,<span class="string">'String'</span>,num2str(handles.dtheta,<span class="string">'%3.1f'</span>));
+    set(uicontrol(handles.txt_theta0),<span class="string">'String'</span>,num2str(handles.theta0, <span class="string">'%3.1f'</span>));
+    set(uicontrol(handles.txt_phi0),<span class="string">'String'</span>,num2str(handles.phi0, <span class="string">'%3.1f'</span>));
+    set(uicontrol(handles.txt_zs0x),<span class="string">'String'</span>,num2str(handles.zs0(1), <span class="string">'%1.3f'</span>));
+    set(uicontrol(handles.txt_zs0y),<span class="string">'String'</span>,num2str(handles.zs0(2), <span class="string">'%1.3f'</span>));
+    set(uicontrol(handles.txt_zs0z),<span class="string">'String'</span>,num2str(handles.zs0(3), <span class="string">'%1.3f'</span>));
+    set(uicontrol(handles.txt_v0x),<span class="string">'String'</span>,num2str(handles.V0(1), <span class="string">'%3.1f  '</span>));
+    set(uicontrol(handles.txt_v0y),<span class="string">'String'</span>,num2str(handles.V0(2), <span class="string">'%3.1f  '</span>));
+    set(uicontrol(handles.txt_v0z),<span class="string">'String'</span>,num2str(handles.V0(3), <span class="string">'%3.1f  '</span>));
+
+    handles.headera = strcat(<span class="string">'FTE start: '</span>,datestr(handles.fdna), <span class="string">' NEV: '</span>, num2str(handles.nev),<span class="string">', w:'</span>, num2str(handles.w), <span class="string">', ny:'</span>, num2str(handles.ny));
+    handles.headerb = strcat(<span class="string">'FTE stop: '</span>,datestr(handles.fdnb), <span class="string">', sc:'</span>, handles.sc, <span class="string">', src:'</span>, handles.src);
+    set(uicontrol(handles.txt_headera),<span class="string">'String'</span>,handles.headera);
+    set(uicontrol(handles.txt_headerb),<span class="string">'String'</span>,handles.headerb);
+    disp(<span class="string">'======================= End Load Function ==================='</span>)
+    disp(<span class="string">'======================= End Load Function ==================='</span>)
+    disp(<span class="string">'======================= End Load Function ==================='</span>)
+    disp(<span class="string">'======================= End Load Function ==================='</span>)
+    disp(<span class="string">'======================= End Load Function ==================='</span>)
+    guidata(hObject, handles);
+    disp(<span class="string">'======================= End Load Function ==================='</span>)
+
+<span class="keyword">function</span> btn_display_Callback(hObject, eventdata, handles)
+    <span class="comment">% --- Update Headers</span>
+    handles.headera = strcat(<span class="string">'FTE start: '</span>,datestr(handles.fdna), <span class="keyword">...</span>
+        <span class="string">' NEV: '</span>, num2str(handles.nev),<span class="string">', w:'</span>, num2str(handles.w), <span class="keyword">...</span>
+        <span class="string">', ny:'</span>, num2str(handles.ny));
+    handles.headerb = strcat(<span class="string">'FTE stop: '</span>,datestr(handles.fdnb), <span class="keyword">...</span>
+        <span class="string">', sc:'</span>, handles.sc, <span class="string">', src:'</span>, handles.src);
+    set(uicontrol(handles.txt_headera),<span class="string">'String'</span>,handles.headera);
+    set(uicontrol(handles.txt_headerb),<span class="string">'String'</span>,handles.headerb);
+    <span class="comment">% --- Populate GUI</span>
+<span class="comment">%    axes(handles.axes1);</span>
+<span class="comment">%     cla(handles.axes1);</span>
+    disp(<span class="string">'==================== 1st Coordinate Transform Data ===================='</span>)
+    disp(<span class="string">'Transforming zs from GSM to local, using MVAB Kbint value'</span>)
+    vza=handles.V0*handles.zs0';
+    vzav=vza*handles.zs0;
+    vhtsv=handles.V0-vzav;
+    vhts=sqrt(vhtsv*vhtsv');
+    vhtsn=vhtsv./vhts;
+    handles.xs0=-vhtsn;
+    handles.ys0=cross(handles.zs0,handles.xs0);
+    handles.ys0=handles.ys0./norm(handles.ys0);
+    disp(<span class="string">' '</span>)
+    nxtest=sind(handles.theta0)*cosd(handles.phi0);
+    nytest=sind(handles.theta0)*sind(handles.phi0);
+    nztest=cosd(handles.theta0);
+    disp([<span class="string">'nxtest = '</span>, num2str(nxtest)])
+    disp([<span class="string">'nytest = '</span>, num2str(nytest)])
+    disp([<span class="string">'nytest = '</span>, num2str(nytest)])
+    disp([<span class="string">'Starting xs (from V0) = '</span>, num2str(handles.xs0, <span class="string">' %3.3f'</span>)])
+    disp([<span class="string">'Starting ys (from X product) = '</span>, num2str(handles.ys0, <span class="string">' %3.3f'</span>)])
+    disp([<span class="string">'Starting zs (from MVAB Kbint) = '</span>, num2str(handles.zs0, <span class="string">' %3.3f'</span>)])
+    disp([<span class="string">'Dot Product of xs &amp; ys = '</span>, num2str(handles.xs0*handles.ys0')])
+    disp([<span class="string">'Dot Product of zs &amp; xs = '</span>, num2str(handles.zs0*handles.xs0')])
+    disp([<span class="string">'Dot Product of ys &amp; zs = '</span>, num2str(handles.ys0*handles.zs0')])
+    disp(<span class="string">'Getting adjustment angles for next rotation...'</span>)
+    disp(<span class="string">'==================== End 1st Coordinate Transform  ===================='</span>)
+    disp(<span class="string">' '</span>)
+    disp(<span class="string">' '</span>)
+    disp(<span class="string">'=================== 2nd Coordinate Transform ======================'</span>)
+
+    <span class="comment">% --- get updated angles from interface bold text in "Manual Adjust" Panel</span>
+    handles.dphi = str2double(get(uicontrol(handles.txt_dphi), <span class="string">'String'</span>));
+    handles.dtheta = str2double(get(uicontrol(handles.txt_dtheta), <span class="string">'String'</span>));
+    <span class="comment">%------ set handles.phi and handles.theta ----------</span>
+    handles.theta = handles.theta0+handles.dtheta;     <span class="comment">%</span>
+    handles.phi = handles.phi0+handles.dphi;           <span class="comment">%</span>
+    <span class="comment">%---------------------------------------------------</span>
+    handles.nxp=sind(handles.theta)*cosd(handles.phi);
+    handles.nyp=sind(handles.theta)*sind(handles.phi);
+    handles.nzp=cosd(handles.theta);
+    handles.nitr=[handles.nxp,handles.nyp,handles.nzp];
+    handles.zs=handles.nitr;
+    vza=handles.V0*handles.zs';
+    vzav=vza*handles.zs;
+    vhtsv=handles.V0-vzav;
+    vhts=sqrt(vhtsv*vhtsv');
+    vhtsn=vhtsv./vhts;
+    handles.xs=-vhtsn;
+    handles.ys=cross(handles.zs,handles.xs);
+    handles.ys=handles.ys./norm(handles.ys);
+    guidata(hObject, handles);
+    disp([<span class="string">'Final xs after all Xforms = '</span>, num2str(handles.xs,<span class="string">' %2.3f'</span>)])
+    disp([<span class="string">'Final ys after all Xforms = '</span>, num2str(handles.ys,<span class="string">' %2.3f'</span>)])
+    disp([<span class="string">'Final zs after all Xforms = '</span>, num2str(handles.zs,<span class="string">' %2.3f'</span>)])
+    disp(<span class="string">' '</span>)
+    disp(<span class="string">'--------- Orthogonal Test (should be very close to 0.0) ---------'</span>)
+    disp([<span class="string">'xs dot ys ='</span>, num2str(handles.xs*handles.ys')])
+    disp([<span class="string">'ys dot zs ='</span>, num2str(handles.ys*handles.zs')])
+    disp([<span class="string">'xs dot zs ='</span>, num2str(handles.xs*handles.zs')])
+    disp(<span class="string">' '</span>)
+    set(uicontrol(handles.txt_dphi),<span class="string">'String'</span>,num2str(handles.dphi, <span class="string">'%3.1f  '</span>));
+    set(uicontrol(handles.txt_dtheta),<span class="string">'String'</span>,num2str(handles.dtheta, <span class="string">'%3.1f  '</span>));
+    set(uicontrol(handles.etxt_dphi),<span class="string">'String'</span>,num2str(handles.dphi, <span class="string">'%3.1f  '</span>));
+    set(uicontrol(handles.etxt_dtheta),<span class="string">'String'</span>,num2str(handles.dtheta, <span class="string">'%3.1f  '</span>));
+    set(uicontrol(handles.txt_zsx),<span class="string">'String'</span>,num2str(handles.zs(1),<span class="string">'%1.3f'</span>));
+    set(uicontrol(handles.txt_zsy),<span class="string">'String'</span>,num2str(handles.zs(2),<span class="string">'%1.3f'</span>));
+    set(uicontrol(handles.txt_zsz),<span class="string">'String'</span>,num2str(handles.zs(3),<span class="string">'%1.3f'</span>));
+    set(uicontrol(handles.txt_xsx),<span class="string">'String'</span>,num2str(handles.xs(1),<span class="string">'%1.3f'</span>));
+    set(uicontrol(handles.txt_xsy),<span class="string">'String'</span>,num2str(handles.xs(2),<span class="string">'%1.3f'</span>));
+    set(uicontrol(handles.txt_xsz),<span class="string">'String'</span>,num2str(handles.xs(3),<span class="string">'%1.3f'</span>));
+    set(uicontrol(handles.txt_ysx),<span class="string">'String'</span>,num2str(handles.ys(1),<span class="string">'%1.3f'</span>));
+    set(uicontrol(handles.txt_ysy),<span class="string">'String'</span>,num2str(handles.ys(2),<span class="string">'%1.3f'</span>));
+    set(uicontrol(handles.txt_ysz),<span class="string">'String'</span>,num2str(handles.ys(3),<span class="string">'%1.3f'</span>));
+    set(uicontrol(handles.txt_cphi),<span class="string">'String'</span>,num2str(handles.phi, <span class="string">'%3.1f  '</span>));
+    set(uicontrol(handles.txt_ctheta),<span class="string">'String'</span>,num2str(handles.theta, <span class="string">'%3.1f  '</span>));
+    handles.dTim1 = handles.secs(handles.i1:handles.i2)-handles.secs(handles.i1);               <span class="comment">% my code (dd, 2011)</span>
+
+    <span class="comment">% project B into reconstruction coord.</span>
+    handles.bxs=(handles.bc.*handles.nb)*handles.xs';
+    handles.bys=(handles.bc.*handles.nb)*handles.ys';
+    handles.bzs=(handles.bc.*handles.nb)*handles.zs';
+    handles.vxs = -handles.V0*handles.xs';
+    handles.xa0=handles.vxs.*handles.dTim1;
+    handles.iix = handles.i1:handles.i2;
+    handles.dzn=handles.Nx(handles.iix);                    <span class="comment">% density reconstruction by matrix</span>
+    handles.Tp = handles.Tx(handles.iix)/handles.kb2;
+    <span class="comment">%Project V into reconstruction coord.</span>
+    vxc=zeros(1,handles.ndata);
+    vyc=zeros(1,handles.ndata);
+    vzc=zeros(1,handles.ndata);
+    <span class="keyword">for</span> i=1:handles.ndata
+      vxc(i)=(handles.vp(i,:)-handles.V0)*handles.xs';
+      vyc(i)=(handles.vp(i,:)-handles.V0)*handles.ys';
+      vzc(i)=(handles.vp(i,:)-handles.V0)*handles.zs';
+    <span class="keyword">end</span>
+
+    <span class="comment">% avplx=mean(vxc);</span>
+    <span class="comment">% avply=mean(vyc);</span>
+    <span class="comment">% avplz=mean(vzc);</span>
+    <span class="comment">% set(uicontrol(handles.txt_ysx), 'String',num2str(avplx, '%3.1f'));</span>
+    <span class="comment">% set(uicontrol(handles.txt_ysy),'String',num2str(avply, '%3.1f '));</span>
+    <span class="comment">% set(uicontrol(handles.txt_ysz),'String',num2str(avplz, '%3.1f '));</span>
+    zsx = strcat(num2str(handles.zs(1),<span class="string">'%1.3f'</span>),<span class="string">','</span>);
+    zsy = strcat(num2str(handles.zs(2),<span class="string">'%1.3f'</span>),<span class="string">','</span>);
+    zsz = num2str(handles.zs(3),<span class="string">'%1.3f'</span>);
+    disp(strcat(<span class="string">'(zsx,zsy,zsz)=('</span>,zsx,zsy,zsz,<span class="string">')'</span>));
+    <span class="keyword">if</span> exist(<span class="string">'v0gsm'</span>)==1,
+      disp(strcat(<span class="string">'v0gsm='</span>,num2str(v0gsm)));
+    <span class="keyword">end</span>
+    <span class="comment">%Calculate vector potential A along y=0</span>
+    ndA=zeros(1,handles.lenb);
+    <span class="keyword">for</span> i=2:handles.lenb                       <span class="comment">%</span>
+      ndA(i)=-(handles.bys(i)+handles.bys(i-1))*(handles.dTim1(i)-<span class="keyword">...</span>
+          handles.dTim1(i-1))*handles.vxs*handles.nv*0.5;  <span class="comment">% Determines A for different</span>
+    <span class="keyword">end</span>
+    A1=cumsum(ndA);                   <span class="comment">% Area: cumulative sum.  every iteration, we add more area</span>
+    A1=A1';                           <span class="comment">% transpose A1</span>
+    bb=sqrt(handles.bxs.^2+handles.bys.^2+handles.bzs.^2);  <span class="comment">% magnitude of total bfield</span>
+    pp=handles.dzn.*handles.Tp*handles.kb*handles.nden;     <span class="comment">% new pp factor (without nt)</span>
+    bmax=max(bb);                                           <span class="comment">% maximum b magnitude</span>
+    nmax=max(handles.dzn)*handles.nden;                     <span class="comment">% density maximum value</span>
+    <span class="comment">%Normalized factors</span>
+    handles.b0=bmax;                                        <span class="comment">% b0 = max total b magnitude</span>
+    p0=bmax*bmax/handles.miu;                               <span class="comment">% max pressure value</span>
+    n0=nmax;                                                <span class="comment">% max density value from 5 lines above.</span>
+    vv0=sqrt(handles.b0^2/(handles.miu*n0*handles.mp)*1e-6);<span class="comment">% max b field divided by max density &amp; constants</span>
+    A0=max(abs(A1));                                        <span class="comment">% A0 = maximum Area Value</span>
+    handles.L0=(A0/bmax)*1e-3;                              <span class="comment">% L0 = average B/unit area</span>
+    disp([<span class="string">'L0='</span>,num2str(handles.L0)])                       <span class="comment">% disp L0</span>
+    handles.pbz=pp./p0+((handles.bzs./handles.b0).^2)/2;    <span class="comment">% pbz = magnetic pressure in bz?</span>
+    handles.An=A1./A0;                                      <span class="comment">% normalizes range of area from 0 to 1</span>
+    handles.amax1=max(handles.An);                          <span class="comment">% max normalized value (1)</span>
+    handles.amin1=min(handles.An);                          <span class="comment">% min normalized value (0)</span>
+    handles.fS1=polyfit(handles.An,handles.pbz,4);          <span class="comment">%Pt(A)   4th deg poly fit</span>
+    handles.fZ1=polyfit(handles.An,handles.bzs/handles.b0,5); <span class="comment">%Bz(A)</span>
+    <span class="comment">%--interpolation--%</span>
+    handles.nx=handles.ndata+(handles.ndata-1)*3;               <span class="comment">% is this just an approximation for distance?</span>
+    handles.xi=handles.xa0(1):(handles.xa0(handles.ndata)-handles.xa0(1))/<span class="keyword">...</span>
+        (handles.nx-1):handles.xa0(handles.ndata);
+    bxi=interp1(handles.xa0,handles.bxs./handles.b0,handles.xi,<span class="string">'spline'</span>);
+    byi=interp1(handles.xa0,handles.bys./handles.b0,handles.xi,<span class="string">'spline'</span>);
+    ht=0;
+    py=0.1/1;
+    handles.mid=round(handles.ny/2)+ht;
+    handles.x=handles.xi./handles.L0;
+    hx=handles.x(2)-handles.x(1);       <span class="comment">%uniform grids</span>
+    hy=py*hx;
+    handles.y = zeros(1,handles.ny);
+    <span class="keyword">for</span> j=1:handles.ny
+      handles.y(j)=(j-handles.mid)*hy;
+    <span class="keyword">end</span>
+    <span class="comment">%---------------------------%</span>
+    clear(<span class="string">'ndA'</span>);
+    ndA(1)=0;
+    <span class="keyword">for</span> i=2:handles.nx
+      ndA(i)=-(byi(i)+byi(i-1))*(handles.x(i)-handles.x(i-1))*0.5;
+    <span class="keyword">end</span>
+    A2=cumsum(ndA);
+    handles.u=zeros(handles.ny,handles.nx);
+    handles.udy=zeros(handles.ny,handles.nx);
+    handles.udx=zeros(handles.ny,handles.nx);
+    handles.u(handles.mid,:)=A2;
+    handles.udy(handles.mid,:)=bxi;
+    handles.udx(handles.mid,:)=byi;
+    handles.c1=[handles.nx handles.ny handles.mid hx hy handles.amax1 handles.amin1];
+    <span class="comment">%--plot limits--</span>
+    handles.ymin = min(handles.y*handles.L0);
+    handles.ymax = max(handles.y*handles.L0);
+    handles.xmin = min(handles.x*handles.L0);
+    handles.xmax = max(handles.x*handles.L0);
+    handles.hafx = handles.xmax*0.5;
+    handles.hafy = handles.ymax*0.5;
+
+    guidata(hObject,handles);
+    <span class="comment">% disp('B Vector Magnitudes are', num2str(sqrt(handles.bc(:,1).^2+handles.bc(:,2).^2)))</span>
+    <span class="comment">% -- call plot function</span>
+    <span class="comment">% set(gcf,'CurrentAxes',handles.axes1);</span>
+    <span class="comment">% cla(handles.axes1)</span>
+    handles = plotstuff(hObject,eventdata,handles);
+    <span class="comment">% set(gcf,'CurrentAxes',handles.axes2);</span>
+    <span class="comment">% cla(handles.axes2)</span>
+    guidata(hObject, handles);
+    handles = polyplot(hObject,eventdata,handles);
+    guidata(hObject, handles);
+    disp(<span class="string">''</span>)
+    disp(<span class="string">'======================= End Display Function ==================='</span>)
+    disp(<span class="string">'======================= End Display Function ==================='</span>)
+    disp(<span class="string">'======================= End Display Function ==================='</span>)
+    disp(<span class="string">'======================= End Display Function ==================='</span>)
+    disp(<span class="string">'======================= End Display Function ==================='</span>)
+    disp(<span class="string">'======================= End Display Function ==================='</span>)
+    disp(strcat(handles.doy,<span class="string">'; nev='</span>,num2str(handles.nev),<span class="string">'; ny='</span>,<span class="keyword">...</span>
+      num2str(handles.ny),<span class="string">'; w='</span>, num2str(handles.w),<span class="string">'; dtheta='</span>,<span class="keyword">...</span>
+      num2str(handles.dtheta),<span class="string">'; dphi='</span>,num2str(handles.dphi)))
+
+<span class="keyword">function</span> btn_exit_Callback(hObject, eventdata, handles)
+gca;
+clear <span class="string">all</span>;
+close <span class="string">all</span>;
+clc;
+
+<span class="keyword">function</span> pm_doy_Callback(hObject, eventdata, handles)
+contents = cellstr(get(hObject,<span class="string">'String'</span>));
+handles.doy = contents{get(hObject,<span class="string">'Value'</span>)};
+disp([<span class="string">'handles.doy from callbackFcn= '</span>, handles.doy])
+handles.yr = sscanf(handles.doy,<span class="string">'%4c%*6c'</span>,2);
+handles.month = sscanf(handles.doy, <span class="string">'%*5c%2c%*3c'</span>,2);
+handles.day = sscanf(handles.doy, <span class="string">'%*8c%2c'</span>,2);
+guidata(hObject, handles);
+
+<span class="keyword">function</span> pm_doy_CreateFcn(hObject, eventdata, handles)
+
+<span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+contents = cellstr(get(hObject,<span class="string">'String'</span>));
+handles.doy = contents{get(hObject,<span class="string">'Value'</span>)};
+disp([<span class="string">'handles.doy from createFcn= '</span>, handles.doy])
+handles.yr = sscanf(handles.doy,<span class="string">'%4c%*6c'</span>,2);
+handles.month = sscanf(handles.doy, <span class="string">'%*5c%2c%*3c'</span>,2);
+handles.day = sscanf(handles.doy, <span class="string">'%*8c%2c'</span>,2);
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_ti_Callback(hObject, eventdata, handles)
+handles.ti=get(hObject,<span class="string">'String'</span>);
+disp([<span class="string">'handles.ti from callbackFcn= '</span>,handles.ti])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_ti_CreateFcn(hObject, eventdata, handles)
+
+<span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+handles.ti=get(hObject,<span class="string">'String'</span>);
+disp([<span class="string">'handles.ti from createFcn= '</span>,handles.ti])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_tf_Callback(hObject, eventdata, handles)
+handles.tf=get(hObject,<span class="string">'String'</span>);
+disp([<span class="string">'handles.tf from callbackFcn= '</span>,handles.tf])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_tf_CreateFcn(hObject, eventdata, handles)
+
+<span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+handles.tf=get(hObject,<span class="string">'String'</span>);
+disp([<span class="string">'handles.tf from createFcn= '</span>,handles.tf])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> pm_sc_Callback(hObject, eventdata, handles)
+contents = cellstr(get(hObject,<span class="string">'String'</span>));
+handles.sc = contents{get(hObject,<span class="string">'Value'</span>)};
+guidata(hObject, handles);
+disp([<span class="string">'handles.sc from callbackFcn= '</span>,handles.sc])
+
+<span class="keyword">function</span> pm_sc_CreateFcn(hObject, eventdata, handles)
+
+<span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+contents = cellstr(get(hObject,<span class="string">'String'</span>));
+handles.sc = contents{get(hObject,<span class="string">'Value'</span>)};
+guidata(hObject, handles);
+disp([<span class="string">'handles.sc from createFcn= '</span>,handles.sc])
+
+<span class="keyword">function</span> pm_src_Callback(hObject, eventdata, handles)
+contents = cellstr(get(hObject,<span class="string">'String'</span>));
+handles.src = contents{get(hObject,<span class="string">'Value'</span>)};
+guidata(hObject, handles);
+disp([<span class="string">'handles.src from callbackFcn= '</span>,handles.src])
+
+<span class="keyword">function</span> pm_src_CreateFcn(hObject, eventdata, handles)
+
+<span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+contents = cellstr(get(hObject,<span class="string">'String'</span>));
+handles.src = contents{get(hObject,<span class="string">'Value'</span>)};
+guidata(hObject, handles);
+disp([<span class="string">'handles.src from createFcn= '</span>,handles.src])
+
+<span class="keyword">function</span> etxt_w_Callback(hObject, eventdata, handles)
+handles.w=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.w from callbackFcn= '</span>,num2str(handles.w)])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_w_CreateFcn(hObject, eventdata, handles)
+
+<span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+handles.w=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.w from CreateFcn= '</span>,num2str(handles.w)])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_nev_Callback(hObject, eventdata, handles)
+handles.nev=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.nev from callbackFcn= '</span>,num2str(handles.nev)])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_nev_CreateFcn(hObject, eventdata, handles)
+
+<span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+handles.nev=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.nev from CreateFcn= '</span>,num2str(handles.nev)])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_dphi_Callback(hObject, eventdata, handles)
+handles.dphi=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'phi from CallbackFcn= '</span>, num2str(handles.dphi)])
+guidata(hObject, handles);
+set(uicontrol(handles.txt_dphi),<span class="string">'String'</span>,num2str(handles.dphi));
+uicontrol(handles.etxt_dtheta);      <span class="comment">%set focus to the next field.</span>
+guidata(hObject, handles);          <span class="comment">%update again</span>
+
+<span class="keyword">function</span> etxt_dphi_CreateFcn(hObject, eventdata, handles)
+
+<span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+handles.dphi=get(hObject,<span class="string">'String'</span>);
+disp([<span class="string">'handles.dphi from CreateFcn= '</span>, num2str(handles.dphi)])
+
+<span class="keyword">function</span> etxt_dtheta_Callback(hObject, eventdata, handles)
+handles.dtheta=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'dtheta from CallbackFcn= '</span>, num2str(handles.dtheta)])
+guidata(hObject, handles);          <span class="comment">%update handles.</span>
+set(uicontrol(handles.txt_dtheta),<span class="string">'String'</span>,num2str(handles.dtheta));
+uicontrol(handles.etxt_azi);
+guidata(hObject, handles);          <span class="comment">%update again</span>
+
+<span class="keyword">function</span> etxt_dtheta_CreateFcn(hObject, eventdata, handles)
+
+<span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+handles.dtheta=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.dtheta from CreateFcn= '</span>, num2str(handles.dtheta)])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_azi_Callback(hObject, eventdata, handles)
+handles.azi=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.azi from CallbackFcn= '</span>, num2str(handles.azi)])
+guidata(hObject, handles);
+set(uicontrol(handles.txt_dphi),<span class="string">'String'</span>,num2str(handles.dphi));
+uicontrol(handles.etxt_pol);
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_azi_CreateFcn(hObject, eventdata, handles)
+
+<span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+handles.azi=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.azi from CreateFcn= '</span>, num2str(handles.azi)])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_pol_Callback(hObject, eventdata, handles)
+handles.pol=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.pol from CallbackFcn= '</span>, num2str(handles.pol)])
+guidata(hObject, handles);
+set(uicontrol(handles.txt_dtheta),<span class="string">'String'</span>,num2str(handles.dtheta));
+uicontrol(handles.btn_display);
+guidata(hObject, handles);          <span class="comment">%update again</span>
+
+<span class="keyword">function</span> etxt_pol_CreateFcn(hObject, eventdata, handles)
+
+<span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+handles.pol=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.pol from CreateFcn= '</span>, num2str(handles.pol)])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_num_Callback(hObject, eventdata, handles)
+handles.num=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.num from CallbackFcn= '</span>,handles.num])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_num_CreateFcn(hObject, eventdata, handles)
+
+<span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+handles.num=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.num from createFcn= '</span>,handles.num])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> txt_dtheta_CreateFcn(thetaObject, eventdata, handles)
+handles.txt_dtheta=str2double(get(thetaObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.txt_dtheta from CreateFcn= '</span>,num2str(handles.txt_dtheta)]);
+guidata(thetaObject, handles);
+
+<span class="keyword">function</span> txt_dphi_CreateFcn(phiObject, eventdata, handles)
+handles.txt_dphi=str2double(get(phiObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.txt_dphi from CreateFcn= '</span>,num2str(handles.txt_dphi)]);
+guidata(phiObject, handles);
+
+<span class="keyword">function</span> handles = plot_data_calc(hObject,eventdata,handles)
+<span class="comment">%save the current handles structure</span>
+<span class="comment">%for the GUI figure</span>
+[handles.Aup,handles.Aupdx,handles.Aupdx]=gsup(handles.c1,handles.x,handles.y,handles.u,handles.udy,handles.udx,handles.fS1);
+[handles.Adn,handles.Adndy,handles.Adndx]=gsdn(handles.c1,handles.x,handles.y,handles.u,handles.udy,handles.udx,handles.fS1);
+handles.Aup=handles.Aup+handles.Adn;
+handles.Aup(handles.mid,:)=handles.Aup(handles.mid,:)/2;
+handles.Aupdx=handles.Aupdx+handles.Adndy;
+handles.Aupdx(handles.mid,:)=handles.Aupdx(handles.mid,:)/2;
+handles.Aupdx=handles.Aupdx+handles.Adndx;
+handles.Aupdx(handles.mid,:)=handles.Aupdx(handles.mid,:)/2;
+handles.gg=1:handles.ny;
+handles.Bzup=zeros(handles.ny,handles.nx);
+<span class="keyword">for</span> j=1:handles.ny
+  <span class="keyword">for</span> i=1:handles.nx
+    handles.Bzup(j,i)=polyval(handles.fZ1,handles.Aup(j,i));            <span class="comment">% added handles to bzup</span>
+    <span class="keyword">if</span> handles.Aup(j,i)&gt;handles.amax1
+      handles.Bzup(j,i)=polyval(handles.fZ1,handles.amax1);     <span class="comment">% added handles to bzup</span>
+    <span class="keyword">elseif</span> handles.Aup(j,i)&lt;handles.amin1
+      handles.Bzup(j,i)=polyval(handles.fZ1,handles.amin1);     <span class="comment">% added handles to bzup</span>
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+handles.B3 = handles.Bzup(handles.gg,:)*handles.b0*1e9;              <span class="comment">% defines 3rd axis</span>
+
+<span class="keyword">function</span> handles = plotstuff(hObject, eventdata,handles)
+<span class="comment">% Plotstuff only actually plots the main axes (called axes1) which is the</span>
+<span class="comment">% window with the magnetic field lines and contour plot and vectors.</span>
+<span class="comment">% The other window with the poly fit (axes2) is plotted by the function</span>
+<span class="comment">% polyplot</span>
+<span class="comment">%     caller = get(hObject, 'Tag');</span>
+<span class="comment">%     dsp = 'btn_display';</span>
+<span class="comment">%     sve = 'btn_save';</span>
+<span class="comment">%     cmpds = strcmp(caller,dsp);</span>
+<span class="comment">%     cmpsv = strcmp(caller,sve);</span>
+<span class="comment">%     xx0 = 0;</span>
+<span class="comment">%     if cmpds == 1</span>
+<span class="comment">%</span>
+<span class="comment">%         set(gcf,'CurrentAxes',handles.axes1)</span>
+<span class="comment">%     else</span>
+<span class="comment">%         % figure 2 is the save window</span>
+<span class="comment">%         figure(2)</span>
+<span class="comment">%         % set(gcf,'CurrentAxes',handles.MainPrintTempFig)</span>
+<span class="comment">%     end</span>
+    <span class="comment">%  This is a better way:</span>
+    cla(handles.axes1,<span class="string">'reset'</span>)
+    handles = plot_data_calc(hObject,eventdata,handles);           <span class="comment">%call WLT code;</span>
+    xlabel(handles.axes1,<span class="string">'x [km]'</span>,<span class="string">'fontsize'</span>,12);
+    ylabel(handles.axes1,<span class="string">'y [km]'</span>,<span class="string">'fontsize'</span>,12);
+    set(gcf,<span class="string">'CurrentAxes'</span>,handles.axes1)
+    pcolor(handles.x*handles.L0,handles.y(handles.gg)*handles.L0,handles.B3);            <span class="comment">% displays 3rd axis (bz) in faceted shading</span>
+    shading <span class="string">interp</span>                       <span class="comment">% changes shading to interpolated</span>
+    minb3=min(min(handles.B3));
+    maxb3=max(max(handles.B3));
+    caxis([minb3 maxb3]);
+    handles.zbar=colorbar(<span class="string">'vertical'</span>);
+    set(handles.zbar,<span class="string">'Fontsize'</span>,8);
+    set(get(handles.zbar,<span class="string">'XLabel'</span>),<span class="string">'String'</span>,<span class="string">'Bz [nT]'</span>,<span class="string">'Rotation'</span>,0,<span class="string">'HorizontalAlignment'</span>,<span class="string">'left'</span>,<span class="string">'Fontsize'</span>,10);
+    hold <span class="string">on</span>;
+    [cc,hh]=contour(handles.x*handles.L0,handles.y(handles.gg)*handles.L0,handles.Aup(handles.gg,:),[-4:0.11:4],<span class="string">'k'</span>);
+    set(hh,<span class="string">'linewidth'</span>,1.0);
+    <span class="comment">%----------------quiver----------------</span>
+    u = handles.xa0;
+    v = zeros(1,handles.ndata);
+    x = handles.bxs';
+    y = handles.bys';
+    scale = 0.3;
+    color = <span class="string">'w'</span>;
+    quiv1=quiver(u,v,x,y,scale,color);  <span class="comment">% plots white arrows accross middle.</span>
+    set(quiv1,<span class="string">'linewidth'</span>,1.5);                          <span class="comment">% sets linewidth for quiver arrows</span>
+    set(handles.axes1,<span class="string">'fontsize'</span>,10,<span class="string">'TickDir'</span>,<span class="string">'out'</span>,<span class="string">'linewidth'</span>,1.0);
+    axis <span class="string">equal</span>
+    handles.xdist = handles.x*handles.L0;
+    <span class="comment">% fudge factor for x range.</span>
+    <span class="keyword">if</span> handles.xdist &lt;= 0
+      axis([min(handles.x*handles.L0), 0, min(handles.y*handles.L0), max(handles.y*handles.L0)])
+    <span class="keyword">else</span>
+      axis([0, max(handles.x*handles.L0), min(handles.y*handles.L0), max(handles.y*handles.L0)])
+    <span class="keyword">end</span>
+
+<span class="keyword">function</span> etxt_ny_Callback(hObject, eventdata, handles)
+handles.ny=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.ny from CallbackFcn= '</span>, num2str(handles.ny)])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> etxt_ny_CreateFcn(hObject, eventdata, handles)
+
+<span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+handles.ny=str2double(get(hObject,<span class="string">'String'</span>));
+disp([<span class="string">'handles.ny from CreateFcn= '</span>, num2str(handles.ny)])
+guidata(hObject, handles);
+
+<span class="keyword">function</span> txt_headera_CreateFcn(hObject, eventdata, handles)
+handles.header = str2double(get(hObject,<span class="string">'String'</span>));
+guidata(hObject,handles);
+
+<span class="keyword">function</span> axes2_CreateFcn(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to axes2 (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+<span class="comment">% Hint: place code in OpeningFcn to populate axes2</span>
+
+<span class="keyword">function</span> btn_testcase_Callback(hObject, eventdata, handles)
+<span class="comment">% handles.TestCaseBtn = 42;</span>
+<span class="comment">% TCB = handles.TestCaseBtn;</span>
+<span class="comment">% disp(strcat('This is TCB in btn_testcase',num2str(TCB)));</span>
+<span class="comment">%</span>
+ handles = TestFcn(hObject,eventdata,handles);
+
+<span class="keyword">function</span> handles = TestFcn(hObject, eventdata, handles)
+    <span class="comment">% ------------ Stefan and Dave indexing</span>
+    <span class="comment">%     iidx = handles.ndata-1;</span>
+    <span class="comment">%</span>
+    <span class="comment">%     if handles.polyamin1 == 0</span>
+    <span class="comment">%         midx = round(handles.An(2:iidx)/0.01);</span>
+    <span class="comment">%         fidx = floor(handles.An(handles.ndata))/0.01;</span>
+    <span class="comment">%         idx = cat(1,1,midx,fidx);</span>
+    <span class="comment">%     else</span>
+    <span class="comment">%         midx = 100 - abs(round(handles.An(2:iidx)/0.01));</span>
+    <span class="comment">%         fidx = abs(floor(handles.An(handles.ndata))/0.01) - 99;</span>
+    <span class="comment">%         idx = cat(1,100,midx,fidx);</span>
+    <span class="comment">%     end</span>
+    <span class="comment">% ------------</span>
+
+    <span class="comment">% ------------ Dave Old Code for Indexing</span>
+    <span class="comment">% some variables:</span>
+    <span class="comment">% handles.An = norm vector potential (data num = handles.ndata)</span>
+    <span class="comment">% handles.pbz = mag field pressure (data num = handles.ndata)</span>
+    <span class="comment">% Norm Check:</span>
+    <span class="comment">% nmck = max(handles.An)-min(handles.An);</span>
+    <span class="comment">% if nmck ~= 1.0</span>
+    <span class="comment">%    disp('Magnetic Vector Potential is not normalized, please fix')</span>
+    <span class="comment">%    return;</span>
+    <span class="comment">% end</span>
+    ax1 = handles.ax1;
+    yys1 = handles.yys1;
+    nd = numel(handles.An);
+    ad = numel(handles.ax1);
+    anr = round(handles.An(2:nd)/0.01); <span class="comment">% rounded handles.An1 (2 dec)</span>
+    axr = round(ax1(2:ad)'/0.01);
+    POIs = zeros(2,2,nd);
+
+    ad = numel(axr);                    <span class="comment">% # elements in 'axr' array</span>
+    POIs(1,1,:) = handles.An;           <span class="comment">% Data x axis</span>
+    POIs(1,2,:) = handles.pbz;          <span class="comment">% Data y axis</span>
+
+    <span class="comment">%  +++++++++++++++++</span>
+    <span class="comment">%  FIX THIS!!!! (then test)</span>
+    <span class="comment">%  +++++++++++++++++</span>
+
+    <span class="comment">% [tf, loc] = ismember(anr, axr);</span>
+    loc2 = loc + 101;
+    test1 = (ax1'+2)/0.01
+    [tft,LOC]=intersect(test1, loc2)
+
+    POIs(2,1,:) = ax1(LOC);              <span class="comment">% x axis from fit</span>
+    POIs(2,2,:) = yys1(LOC);              <span class="comment">% y axis from fit</span>
+    disp();                                    <span class="comment">% an = data</span>
+    <span class="comment">% ++++++++++++++++++</span>
+    <span class="comment">% ++++++++++++++++++</span>
+    <span class="comment">%                                             % ax = fit line</span>
+    <span class="comment">%                        % empty matrix to hold all relevant data points</span>
+    <span class="comment">%         % x axis from data</span>
+    <span class="comment">%         [tf,indx] = ismember(axr,anr);    % Super Clunky... use intersect</span>
+    <span class="comment">%         [c,ia,ib] = intersect(axr,anr);     %#ok&lt;*ASGLU&gt; % so fast!</span>
+    <span class="comment">%        Intersect doesn't do repeated values... stops after find one.</span>
+    <span class="comment">%        use ismember instead:</span>
+    <span class="comment">%</span>
+    <span class="comment">%</span>
+    <span class="comment">%         pbz = handles.pbz;</span>
+    <span class="comment">%         yys = yys1;</span>
+    <span class="comment">%         rzms=sum((pbz-yys(ia)').^2/nd);</span>
+    <span class="comment">%         result = [POIs(1,2,:),POIs(2,2,:)];</span>
+    <span class="comment">%         sdev = std2(result);</span>
+    <span class="comment">%         var = sdev^2;</span>
+    <span class="comment">%         set(uicontrol(handles.txt_sd),'String',num2str(sdev, '%1.3f'));</span>
+    <span class="comment">%         set(uicontrol(handles.txt_var),'String',num2str(var*100, '%1.3f'));</span>
+    <span class="comment">%         for ii = 1:1:nd</span>
+    <span class="comment">%             disp(['ii = ',num2str(ii)])</span>
+    <span class="comment">%             for jj = 1:1:ad</span>
+    <span class="comment">%                 disp(['ii= ',num2str(ii)])</span>
+    <span class="comment">%                 disp(['jj = ', num2str(jj)])</span>
+    <span class="comment">%                 tf = isequal(anr(ii),axr(jj));</span>
+    <span class="comment">%                 disp(['jj= ',num2str(jj)])</span>
+    <span class="comment">%                 disp(['tf= ',num2str(tf)])</span>
+    <span class="comment">%                 disp(['anr(ii)=', num2str(anr(ii))])</span>
+    <span class="comment">%                 disp(['axr(jj)=', num2str(axr(jj))])</span>
+    <span class="comment">%</span>
+    <span class="comment">%                                 if tf == 1</span>
+    <span class="comment">%                                     POIs(2,1,ii) = jj;</span>
+    <span class="comment">%                                 else</span>
+    <span class="comment">%                                     POIs(2,1,ii) = 0;</span>
+    <span class="comment">%                 disp(['nope. moving on', num2str(ii)]);</span>
+    <span class="comment">%                 end</span>
+    <span class="comment">%                 disp(['POIs(2,1,ii)=', num2str(POIs(2,1,ii))])</span>
+    <span class="comment">%             end</span>
+    <span class="comment">%         end</span>
+    <span class="comment">%         handles.POIs(1,1,:) = handles.An    % - x axis</span>
+    <span class="comment">%         handles.POIs(1,2,:) = handles.pbz   % - y axis</span>
+    <span class="comment">%         handles.POIs(2,1,:) = ax1           % values that match handles.An values</span>
+    <span class="comment">%         handles.POIs(2,2,:) = yys1          % values at ax1/An points of interest(POIs)</span>
+    <span class="comment">%         kk = isequal(handles.POIs,1);</span>
+    <span class="comment">%         handles.POIs(2,2,kk) = yys1(kk);</span>
+            <span class="comment">% For Line Break only</span>
+    <span class="comment">% ------------</span>
+
+    <span class="comment">% ------------ Actual stuff we calculate and display</span>
+    ydiff = abs(handles.polyyys1(loc2)' - handles.pbz);
+    sdev = std2(ydiff);
+    maxdiff = max(ydiff);
+    set(uicontrol(handles.txt_sd),<span class="string">'String'</span>,num2str(sdev, <span class="string">'%1.3f'</span>));
+    set(uicontrol(handles.txt_var),<span class="string">'String'</span>,num2str(maxdiff, <span class="string">'%1.3f'</span>));
+    disp();
+<span class="comment">%disp();</span>
+<span class="comment">% handles.TestFcnVar = 43;</span>
+<span class="comment">% TCV = handles.TestFcnVar;</span>
+<span class="comment">% TCB = handles.TestCaseBtn;</span>
+<span class="comment">% fprintf('\n');</span>
+<span class="comment">% fprintf('This is TCB in TestFcn: %d\n',handles.TestCaseBtn);</span>
+<span class="comment">% fprintf('This is TCV in TestFcn: %d\n',TCV)</span>
+<span class="comment">% fprintf('\n');</span>
+<span class="comment">% return</span>
+
+<span class="keyword">function</span> handles = polycalc(hObject, eventdata, handles)
+
+amax1=max(handles.An);
+amin1=min(handles.An);
+handles.ax1=amin1:0.01:amax1;
+ax1 = handles.ax1;
+df1=polyder(handles.fS1); <span class="comment">%dPt/dA        % derivative of the fit</span>
+handles.yys1=polyval(handles.fS1,handles.ax1);           <span class="comment">% value of the function f1</span>
+yys1 = handles.yys1;
+yyz1=polyval(handles.fZ1,ax1);
+handles.polyamax1=amax1;
+handles.polyamin1=amin1;
+handles.polyax1=ax1;            <span class="comment">% x axis on polyfit plot</span>
+handles.polydf1=df1;
+handles.polyyys1=yys1;          <span class="comment">% y axis on polyfit plot</span>
+handles.polyyyz1=yyz1;
+
+<span class="comment">% guidata(hObject, handles);</span>
+
+<span class="comment">% --- Executes during object creation, after setting all properties.</span>
+<span class="keyword">function</span> axes1_CreateFcn(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to axes1 (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+<span class="comment">% Hint: place code in OpeningFcn to populate axes1</span>
+
+<span class="keyword">function</span> polynums(hObject,eventdata, handles)
+<span class="comment">%     iidx = handles.ndata-1;</span>
+<span class="comment">%</span>
+<span class="comment">%     if handles.polyamin1 == 0</span>
+<span class="comment">%         midx = round(handles.An(2:iidx)/0.01);</span>
+<span class="comment">%         fidx = floor(handles.An(handles.ndata))/0.01;</span>
+<span class="comment">%         idx = cat(1,1,midx,fidx);</span>
+<span class="comment">%     else</span>
+<span class="comment">%         midx = 100 - abs(round(handles.An(2:iidx)/0.01));</span>
+<span class="comment">%         fidx = abs(floor(handles.An(handles.ndata))/0.01) - 99;</span>
+<span class="comment">%         idx = cat(1,100,midx,fidx);</span>
+<span class="comment">%     end</span>
+<span class="comment">%</span>
+<span class="comment">%     ydiff = abs(handles.polyyys1(idx)' - handles.pbz);</span>
+<span class="comment">%     sdev = std2(ydiff);</span>
+<span class="comment">%     maxdiff = max(ydiff);</span>
+<span class="comment">%     set(uicontrol(handles.txt_sd),'String',num2str(sdev, '%1.3f'));</span>
+<span class="comment">%     set(uicontrol(handles.txt_var),'String',num2str(maxdiff, '%1.3f'));</span>
+<span class="comment">% The Purpose of polynums is to calculate and display quantitative</span>
+    <span class="comment">% fit values for the poly fit.  It's problematic at best in its</span>
+    <span class="comment">% current format.</span>
+
+
+<span class="keyword">function</span> handles = polyplot(hObject,eventdata,handles)
+<span class="comment">%     PPgcbo = get(gcbo,'Tag');</span>
+<span class="comment">%     PPgcbf = get(gcbf,'Tag');</span>
+<span class="comment">%     PPgca = get(gca,'Tag');</span>
+<span class="comment">%     sprintf('%s', 'polyplot gcbo is ',PPgcbo);</span>
+<span class="comment">%     sprintf('%s', 'polyplot gcbf is ', PPgcbf);</span>
+<span class="comment">%     sprintf('%s', 'polyplot gca is ',PPgca);</span>
+    handles = polycalc(hObject,eventdata,handles);
+    polynums(hObject,eventdata,handles);
+    <span class="comment">% ------ plot TOP RIGHT function from WLT's 6 figures</span>
+    set(handles.axes2,<span class="string">'NextPlot'</span>,<span class="string">'replace'</span>);
+    plot(handles.axes2,handles.An,handles.pbz,<span class="string">'ko'</span>,<span class="string">'Markersize'</span>,5); grid <span class="string">on</span>;
+    set(handles.axes2,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>);
+    plot(handles.axes2,handles.polyax1,handles.polyyys1,<span class="string">'color'</span>,[0.5 0.5 0.5],<span class="string">'linewidth'</span>,3);
+    set (handles.axes2,<span class="string">'ylim'</span>,[min(handles.pbz)-0.1 max(handles.pbz)+0.1],<span class="string">'ytick'</span>,[0:0.1:1],<span class="string">'fontsize'</span>,8);
+    ylabel(handles.axes2,<span class="string">'Pt'</span>,<span class="string">'rotation'</span>,0);
+    xlabel(handles.axes2,<span class="string">'A/A0'</span>);
+<span class="comment">%===================== END PLOT POLY FIT =================================</span>
+</pre><pre class="codeoutput">Error using ==&gt; load
+Unable to read file fte_gui.fig: No such file or directory.
+
+Error in ==&gt; hgload&gt;localLoadFile at 177
+AllVars = load(filename, '-mat');
+
+Error in ==&gt; hgload at 59
+[FigVersion, FigData, VerNum] = localLoadFile(filename);
+
+Error in ==&gt; openfig at 72
+    [fig, savedvisible] = hgload(filename, struct('Visible','off'));
+
+Error in ==&gt; gui_mainfcn&gt;local_openfig at 286
+    gui_hFigure = openfig(name, singleton, visible);
+
+Error in ==&gt; gui_mainfcn at 159
+        gui_hFigure = local_openfig(gui_State.gui_Name, gui_SingletonOpt, gui_Visible);
+
+Error in ==&gt; fte_gui at 42
+    gui_mainfcn(gui_State, varargin{:});
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+function varargout = fte_gui(varargin)
+% fte_gui MATLAB code for fte_gui.fig
+%      fte_gui, by itself, creates a new fte_gui or raises the existing
+%      singleton*.
+%
+%      H = fte_gui returns the handle to a new fte_gui or the handle to
+%      the existing singleton*.
+%
+%      fte_gui('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in fte_gui.M with the given input arguments.
+%
+%      fte_gui('Property','Value',...) creates a new fte_gui or raises the
+%      existing singleton*.  Starting from the left, property value pairs are
+%      applied to the GUI before fte_gui_OpeningFcn gets called.  An
+%      unrecognized property name or invalid value makes property application
+%      stop.  All inputs are passed to fte_gui_OpeningFcn via varargin.
+%
+%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
+%      instance to run (singleton)".
+%
+% See also: GUIDE, GUIDATA, GUIHANDLES
+
+% Edit the above text to modify the response to help fte_gui
+
+% Last Modified by GUIDE v2.5 09-Jun-2012 02:06:10
+
+% Begin initialization code - DO NOT EDIT
+gui_Singleton = 1;
+gui_State = struct('gui_Name',       mfilename, ...
+                   'gui_Singleton',  gui_Singleton, ...
+                   'gui_OpeningFcn', @fte_gui_OpeningFcn, ...
+                   'gui_OutputFcn',  @fte_gui_OutputFcn, ...
+                   'gui_LayoutFcn',  [] , ...
+                   'gui_Callback',   []);
+if nargin && ischar(varargin{1})
+    gui_State.gui_Callback = str2func(varargin{1});
+end
+
+if nargout
+    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+else
+    gui_mainfcn(gui_State, varargin{:});
+end
+% End initialization code - DO NOT EDIT
+
+
+% REPLACE_WITH_DASH_DASH- Executes just before fte_gui is made visible.
+function fte_gui_OpeningFcn(hObject, eventdata, handles, varargin)
+% This function has no output args, see OutputFcn.
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% varargin   command line arguments to fte_gui (see VARARGIN)
+
+% Choose default command line output for fte_gui
+handles.output = hObject;
+
+handles.nden=1e6;         %factor for density
+handles.nt  =1e6;         %factor for temperature
+handles.nv  =1e3;         %factor for velocity
+handles.nb  =1e-9;        %factor for magnetic field (nT to T)
+handles.kb  =1.38*1e-23;  %Boltzmann's constant
+handles.kb2 = 8.61739*1e-5;   % Boltzmann's constant (eV/K);
+handles.miu =4.0*pi*1e-7; %permeability
+handles.mp  =1.67*1e-27;  %proton mass
+handles.tcf = 24*3600.;   %time conversion factor
+handles.dhead = 1;
+
+disp(['handles.nden from OpenFcn=',num2str(handles.nden)])
+disp(['handles.nt from OpenFcn=',num2str(handles.nt)])
+disp(['handles.nv from OpenFcn=',num2str(handles.nv)])
+disp(['handles.nb from OpenFcn=',num2str(handles.nb)])
+disp(['handles.kb from OpenFcn=',num2str(handles.kb)])
+disp(['handles.kb2 from OpenFcn=',num2str(handles.kb2)])
+disp(['handles.miu from OpenFcn=',num2str(handles.miu)])
+disp(['handles.mp from OpenFcn=',num2str(handles.mp)])
+disp(['handles.tcf from OpenFcn=',num2str(handles.tcf)])
+disp(['handles.dhead from OpenFcn=',num2str(handles.dhead)])
+% Update handles structure
+
+guidata(hObject, handles);
+
+% UIWAIT makes fte_gui wait for user response (see UIRESUME)
+% uiwait(handles.fig1);
+
+
+% REPLACE_WITH_DASH_DASH- Outputs from this function are returned to the command line.
+function varargout = fte_gui_OutputFcn(hObject, eventdata, handles) 
+% varargout  cell array for returning output args (see VARARGOUT);
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Get default command line output from handles structure
+varargout{1} = handles.output;
+
+function btn_dphiup_Callback(hObject, eventdata, handles)
+handles.dphi=handles.dphi+handles.azi;
+set(uicontrol(handles.txt_dphi),'String',num2str(handles.dphi));
+set(handles.etxt_dphi,'String',num2str(handles.dphi));
+guidata(hObject, handles);
+
+function btn_dphidn_Callback(hObject, eventdata, handles)
+handles.dphi=handles.dphi-handles.azi;
+set(uicontrol(handles.txt_dphi),'String',num2str(handles.dphi));
+set(handles.etxt_dphi,'String',num2str(handles.dphi));
+guidata(hObject, handles);
+
+function btn_dthetaup_Callback(hObject, eventdata, handles)
+handles.dtheta=handles.dtheta+handles.pol;
+set(uicontrol(handles.txt_dtheta),'String',num2str(handles.dtheta));
+set(handles.etxt_dtheta,'String',num2str(handles.dtheta));
+guidata(hObject, handles);
+
+function btn_dthetadn_Callback(hObject, eventdata, handles)
+handles.dtheta=handles.dtheta-handles.pol;
+set(uicontrol(handles.txt_dtheta),'String',num2str(handles.dtheta));
+set(handles.etxt_dtheta,'String',num2str(handles.dtheta));
+guidata(hObject, handles);
+
+function btn_svpoly_Callback(hObject, eventdata, handles)
+    % Just need to do polycalc/polyplot, but local for saves
+    % i.e. don't overwrite handles with anything here, just use 
+    % handles for input data.
+    polylocal.amax1=max(handles.An); 
+    polylocal.amin1=min(handles.An);         
+    polylocal.ax1=polylocal.amin1:0.01:polylocal.amax1;
+    polylocal.df1=polyder(handles.fS1); %dPt/dA        % derivative of the fit 
+    polylocal.yys1=polyval(handles.fS1,handles.ax1);           % value of the function f1
+    polylocal.yyz1=polyval(handles.fZ1,handles.ax1);
+    fpos = [1 1 100 20];
+    polyprintfig = figure('units', 'characters', 'position',fpos);
+    polyprintaxes = axes('units','characters','NextPlot','replace','ylim',...
+        [min(handles.pbz)-0.1 max(handles.pbz)+0.1],'ytick',[0:0.1:1],'fontsize',8);
+    plot(polyprintaxes,handles.An,handles.pbz,'ko','Markersize',5); grid on; 
+    set(polyprintaxes,'NextPlot','add');
+    plot(polyprintaxes,polylocal.ax1,polylocal.yys1,'color',[0.5 0.5 0.5],'linewidth',3);
+
+    ylabel(polyprintaxes,'Pt','rotation',0);
+    xlabel(polyprintaxes,'A/A0');
+%     f = get(handles.axes1,'position');
+%     o = get(handles.axes1,'outerposition');
+%     go = get(gca,'outerposition');
+%     f2loc = [f(1) f(2) f(3)/2 f(4)];
+%     uns = get(gcf, 'units');
+%     apos = [20 20 f2loc(3) f2loc(4)];
+% ____Location Section (if needed)_________________________________________    
+    yax = get(polyprintaxes,'ylim');
+    top = max(yax);
+    bot = min(yax);
+    xax = get(polyprintaxes,'xlim');
+    lef = min(xax);
+    rit = max(xax);
+    mvup = top+0.03*top;
+    mvdn = bot-0.03*bot;
+    mvlf = lef-0.03*lef;
+    mvrt = rit+0.03*rit;
+
+    % Header Section (if Stefan Wants)_____________________________________    
+    usc = upper(handles.sc);
+    time_a = datestr(handles.fdna);
+    time_b = datestr(handles.fdnb);
+    dte = datestr(handles.fdna);
+    polyhead = ['TH',usc,' ', dte(1:11), ' ',time_a(13:20),' to ',time_b(13:20),...
+        ' Theta=',num2str(handles.theta,'%3.1f'),...
+        ' Phi=', num2str(handles.phi,'%3.1f'),' w:', num2str(handles.w), ...
+        ' ny:', num2str(handles.ny)];
+    text(lef,mvup,[polyhead],'Fontname','arial','Fontsize',10,...
+        'BackgroundColor','w','HorizontalAlignment','left');
+    disp('');
+    %______________________________________________________________________
+%__________________________________________________________________________
+
+
+
+    thnm = num2str(round(handles.theta));
+    phnm = num2str(round(handles.phi));
+    tmnm1 = datestr(handles.ta);
+    tmnm2 = datestr(handles.tb);
+    dnm = num2str([handles.yr,handles.month,handles.day]);
+    filename = [handles.dir,'gsmap_','th',handles.sc,'_',dnm,'_',...
+        tmnm1(13:14),tmnm1(16:17),tmnm1(19:20),'_',tmnm2(13:14),...
+        tmnm2(16:17),tmnm2(19:20),'_theta',thnm,'_phi',...
+        phnm,'_poly','.png'];
+    print(polyprintfig,'-dpng',filename,'-r600');
+    disp(['File saved as ', filename])
+    close(polyprintfig);
+
+function btn_save_Callback(hObject, eventdata, handles)
+    handles = plot_data_calc(hObject,eventdata,handles); % plots values we'll need
+    figpos = [1, 1, 800,600];
+    fig2=figure('Name', 'fig2','Position',figpos,'NumberTitle','on', 'Renderer', 'Zbuffer','RendererMode','manual');
+    set(gca,'NextPlot','replace');
+    usc = upper(handles.sc);
+    time_a = datestr(handles.fdna);
+    time_b = datestr(handles.fdnb);
+    dte = datestr(handles.fdna);
+    heada = ['TH',usc,' ', dte(1:11), ' ',time_a(13:20),' to ',time_b(13:20),...
+        ' Theta=',num2str(handles.theta,'%3.1f'),...
+        ' Phi=', num2str(handles.phi,'%3.1f'),' w:', num2str(handles.w), ...
+        ' ny:', num2str(handles.ny)];    
+    %headb = strcat('FTE stop: ',datestr(handles.fdnb), ...
+    %    ', sc:', handles.sc, ', src:', handles.src);
+    pcolor(handles.x*handles.L0,handles.y(handles.gg)*handles.L0,handles.B3);            % displays 3rd axis (bz) in faceted shading
+    shading interp                       % changes shading to interpolated
+    minb3=min(min(handles.B3));
+    maxb3=max(max(handles.B3));
+    caxis([minb3 maxb3]);
+    zbar=colorbar('vertical');
+    set(zbar,'Fontsize',8);
+    set(get(zbar,'XLabel'),'String','Bz [nT]','Rotation',0,...
+        'HorizontalAlignment','left','Fontsize',10);
+    hold on;
+    [cc,hh]=contour(handles.x*handles.L0,handles.y(handles.gg)*...
+        handles.L0,handles.Aup(handles.gg,:),[-4:0.11:4],'k');
+    set(hh,'linewidth',1.0);
+    u = handles.xa0;
+    v = zeros(1,handles.ndata);
+    x = handles.bxs';
+    y = handles.bys';
+    scale = 0.3;
+    color = 'w';
+    quiv1=quiver(u,v,x,y,scale,color);  % plots white arrows accross middle.
+    set(quiv1,'linewidth',1.5);                          % sets linewidth for quiver arrows
+    set(gca,'fontsize',10,'TickDir','out','linewidth',1.0);
+    axis equal
+    xdist = handles.x*handles.L0;
+    % fudge factor for x range.
+    if xdist <= 0
+      axis([min(handles.x*handles.L0), 0, min(handles.y*handles.L0), max(handles.y*handles.L0)])
+    else
+      axis([0, max(handles.x*handles.L0), min(handles.y*handles.L0), max(handles.y*handles.L0)])
+    end
+    xlabel(gca,'x[km]');
+    ylabel(gca,'y[km]');
+    thnm = num2str(round(handles.theta));
+    phnm = num2str(round(handles.phi));
+    tmnm1 = datestr(handles.ta);
+    tmnm2 = datestr(handles.tb);
+    dnm = num2str([handles.yr,handles.month,handles.day]);
+    top = max(handles.y*handles.L0);
+    bot = min(handles.y*handles.L0);
+    lef = min(handles.x*handles.L0);
+    rit = max(handles.x*handles.L0);
+    up = 105;
+    down = 100;
+    left = -650;
+    hspace = 450;
+    vspace = 200;
+    r1 = 2*vspace+down;
+    r2 = 3*vspace+down;
+    r3 = 4*vspace+down;
+    r4 = 5*vspace+down;
+    c1 = 1*hspace+left;
+    c2 = 2*hspace+left;
+    c3 = 3*hspace+left;
+    c4 = 4*hspace+left;
+    c5 = 5*hspace+left;
+    text(lef+c1,bot-r2,'x:', 'Fontsize', 12, 'BackgroundColor','w', ...
+        'HorizontalAlignment', 'right');
+    text(lef+c1,bot-r3,'y:', 'Fontsize', 12, 'BackgroundColor','w', ...
+        'HorizontalAlignment', 'right');
+    text(lef+c1,bot-r4,'z:', 'Fontsize', 12, 'BackgroundColor','w', ...
+        'HorizontalAlignment', 'right');
+    text(lef+c2,bot-r1,'xs', 'Fontsize', 12, 'BackgroundColor','w', ...
+        'HorizontalAlignment', 'right', 'FontWeight', 'Bold', 'Fontangle', 'italic');
+    text(lef+c3,bot-r1,'ys', 'Fontsize', 12, 'BackgroundColor','w', ...
+        'HorizontalAlignment', 'right', 'FontWeight', 'Bold', 'Fontangle', 'italic');
+    text(lef+c4,bot-r1,'zs', 'Fontsize', 12, 'BackgroundColor','w', ...
+        'HorizontalAlignment', 'right', 'FontWeight', 'Bold', 'Fontangle', 'italic');
+    text(lef+c5,bot-r1,'V0', 'Fontsize', 12, 'BackgroundColor','w', ...
+        'HorizontalAlignment', 'right', 'FontWeight', 'Bold', 'Fontangle', 'italic');
+    text(lef+c2,bot-r2,num2str(handles.xs(1),'%1.3f'), 'Fontsize', 10, ...
+        'BackgroundColor','w', 'HorizontalAlignment', 'right');
+    text(lef+c2,bot-r3,num2str(handles.xs(2),'%1.3f'), 'Fontsize', 10, ...
+        'BackgroundColor','w', 'HorizontalAlignment', 'right');
+    text(lef+c2,bot-r4,num2str(handles.xs(3),'%1.3f'), 'Fontsize', 10, ...
+        'BackgroundColor','w', 'HorizontalAlignment', 'right');
+    text(lef+c3,bot-r2,num2str(handles.ys(1),'%1.3f'), 'Fontsize', 10, ...
+        'BackgroundColor','w', 'HorizontalAlignment', 'right');
+    text(lef+c3,bot-r3,num2str(handles.ys(2),'%1.3f'), 'Fontsize', 10, ...
+        'BackgroundColor','w', 'HorizontalAlignment', 'right');
+    text(lef+c3,bot-r4,num2str(handles.ys(3),'%1.3f'), 'Fontsize', 10, ...
+        'BackgroundColor','w', 'HorizontalAlignment', 'right');
+    text(lef+c4,bot-r2,num2str(handles.zs(1),'%1.3f'), 'Fontsize', 10, ...
+        'BackgroundColor','w', 'HorizontalAlignment', 'right');
+    text(lef+c4,bot-r3,num2str(handles.zs(2),'%1.3f'), 'Fontsize', 10, ...
+        'BackgroundColor','w', 'HorizontalAlignment', 'right');
+    text(lef+c4,bot-r4,num2str(handles.zs(3),'%1.3f'), 'Fontsize', 10, ...
+        'BackgroundColor','w', 'HorizontalAlignment', 'right');
+    text(lef+c5,bot-r2,num2str(handles.V0(1),'%3.1f'), 'Fontsize', 10, ...
+        'BackgroundColor','w', 'HorizontalAlignment', 'right');
+    text(lef+c5,bot-r3,num2str(handles.V0(2),'%3.1f'), 'Fontsize', 10, ...
+        'BackgroundColor','w', 'HorizontalAlignment', 'right');
+    text(lef+c5,bot-r4,num2str(handles.V0(3),'%3.1f'), 'Fontsize', 10, ...
+        'BackgroundColor','w', 'HorizontalAlignment', 'right');
+    text(lef,top+(top*0.17),[heada],'Fontname','arial','Fontsize',...
+        10,'BackgroundColor','w','HorizontalAlignment','left');
+    %text(lef,top+(top*0.15),[heada],'Fontname','arial','Fontsize',...
+    %    10,'BackgroundColor','w','HorizontalAlignment','left');
+    minb3=min(min(handles.B3));
+    maxb3=max(max(handles.B3));
+    caxis([minb3 maxb3]);
+    handles.zbar=colorbar('vertical');
+    set(handles.zbar,'Fontsize',8);
+    set(get(handles.zbar,'XLabel'),'String','Bz [nT]','Rotation',0,...
+        'HorizontalAlignment','left','Fontsize',10);
+    filename = [handles.dir,'gsmap_','th',handles.sc,'_',dnm,'_',...
+        tmnm1(13:14),tmnm1(16:17),tmnm1(19:20),'_',tmnm2(13:14), ...
+        tmnm2(16:17),tmnm2(19:20),'_theta',thnm,'_phi',phnm,'.png'];
+    print(gcf,'-dpng',filename,'-r600');
+    disp(['File saved as ', filename])
+    close(gcf);
+
+function btn_load_Callback(hObject, eventdata, handles)
+
+
+    if isfield(handles,'etxt_w') == 0
+      handles=catstruct(handles,guihandles);
+    end
+    guidata(hObject, handles);    
+    
+    if isfield(handles, 'dhead') == 0
+      handles.nden=1e6;         %factor for density
+      handles.nt  =1e6;         %factor for temperature
+      handles.nv  =1e3;         %factor for velocity
+      handles.nb  =1e-9;        %factor for magnetic field
+      handles.kb  =1.38*1e-23;  %Boltzmann's constant
+      handles.kb2 = 8.61739*1e-5;   % Boltzmann's constant (eV/K);
+      handles.miu =4.0*pi*1e-7; %permeability
+      handles.mp  =1.67*1e-27;  %proton mass
+      handles.tcf = 24*3600.;   %time conversion factor
+      handles.dhead = 1;
+
+      disp(['handles.nden from Load Button=',num2str(handles.nden)])
+      disp(['handles.nt from Load Button=',num2str(handles.nt)])
+      disp(['handles.nv from Load Button=',num2str(handles.nv)])
+      disp(['handles.nb from Load Button=',num2str(handles.nb)])
+      disp(['handles.kb from Load Button=',num2str(handles.kb)])
+      disp(['handles.kb2 from Load Button=',num2str(handles.kb2)])
+      disp(['handles.miu from Load Button=',num2str(handles.miu)])
+      disp(['handles.mp from Load Button=',num2str(handles.mp)])
+      disp(['handles.tcf from Load Button=',num2str(handles.tcf)])
+      disp(['handles.dhead from Load Button=',num2str(handles.dhead)])
+    end
+
+
+
+    disp('===========================Begin LOAD Button Data=================================')
+    
+    ostest = ismac;
+    if ostest == 1
+        handles.dir = '~/dev/matlab/fte_reconstructor';
+        %handles.dir = '~/dev/matlab/Version A of Matlab stuff/'
+    else
+      handles.dir = 'C:\MATLAB\';
+    end
+    
+    HHi = sscanf(handles.ti,'%2c%0.2*4c');
+    MMi = sscanf(handles.ti, '%*3c%2c0%*2c', 2);
+    SSi = sscanf(handles.ti, '%*6c%2c0', 2);
+    HHf = sscanf(handles.tf,'%2c%0.2*4c');
+    MMf = sscanf(handles.tf, '%*3c%2c0%*2c', 2);
+    SSf = sscanf(handles.tf, '%*6c%2c0', 2);
+    % File 1 data file itself %
+    fn = strcat(handles.dir,'th',handles.sc,'_',num2str(strcat(handles.yr,handles.month,handles.day)),'_',num2str(strcat(HHi,MMi)),'_',num2str(strcat(HHf,MMf)),'_GSM_v4_',handles.src,'.dat');
+    disp(['fn is', fn])
+    handles.a = importdata(fn,' ',handles.dhead);
+    disp(['handles.a is loaded.  Class(handles.a.data)  = ',class(handles.a.data)])
+    disp(['                      Size(handles.a.data)  = ', num2str(size(handles.a.data))])
+    % File 2 msheath data file%
+    handles.n=113;
+    fnsh=strcat(handles.dir,'themis_fte_iaga_2011_msheath.txt');
+    %     fnsh=['/FTE/2011/findings/themis_fte_iaga_2011_msheath.txt'];
+    mshfid = fopen(fnsh);
+    handles.msh = textscan(mshfid, '%s %s %s %s %f %s %s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f', handles.n);
+    fclose(mshfid);
+    disp(['handles.msh is loaded.  Class(handles.msh.data)  = ',class(handles.msh)])
+    disp(['                      Size(handles.msh.data)  = ', num2str(size(handles.msh))])
+    % File 3 Event File (nev)%
+    ff = strcat(handles.dir,'themis_fte_iaga_2011_clean_final_timeorder_recons.txt');
+    %     ff='/FTE/2011/findings/themis_fte_iaga_2011_clean_final_timeorder_recons.txt';
+    fid = fopen(ff);
+    handles.f = textscan(fid, '%2c %s %s %s %f %s %s %f %f %f', handles.n);
+    fclose(fid);
+    disp(['handles.f is loaded.  Class(handles.f.data)  = ',class(handles.f)])
+    disp(['                      Size(handles.f.data)  = ', num2str(size(handles.f))])
+    msh_vx = handles.msh{13}(handles.nev);
+    msh_vy = handles.msh{14}(handles.nev);
+    msh_vz = handles.msh{15}(handles.nev);
+    msh_v = [msh_vx,msh_vy,msh_vz];
+    handles.V0=msh_v;
+    handles.nV0=handles.V0/norm(handles.V0);
+    handles.xsv0 = -handles.nV0;
+    handles.secs = handles.a.data(:,1);
+    handles.BX=handles.a.data(:,2);
+    handles.BY=handles.a.data(:,3);
+    handles.BZ=handles.a.data(:,4); 	% Assigns handles.BX, By, Bz (from file - GSM)
+    VX=handles.a.data(:,6);
+    VY=handles.a.data(:,7);
+    VZ=handles.a.data(:,8); 	% Assigns Vx, Vy, Vz (from file - (km/s(GSE))
+    handles.Nx=handles.a.data(:,10); 					% assigns plasma N density from file (cm^-3)
+    handles.Tx=handles.a.data(:,11); 					% assigns temp from file (K)
+    idata=1:length(handles.BX);         
+
+%============%
+% TIME STUFF %
+%============%
+        sdoy = strcat(num2str(handles.yr),'-',num2str(handles.month),'-',num2str(handles.day));
+        tstart = strcat(sdoy,'/',handles.ti);
+        tstop = strcat(sdoy,'/',handles.tf);
+        %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-%
+        % i & f consider only the start/stop time of the  % entire data set (on the scale of
+        % hours)         %
+        %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-%
+        tsi = datestr(tstart, 'mmmm/dd/yyyy HH:MM:SS:FFF');
+        tsf = datestr(tstop, 'mmmm/dd/yyyy HH:MM:SS:FFF');
+        vtsi = datevec(tsi, 'mmmm/dd/yyyy HH:MM:SS:FFF');
+        vtsf = datevec(tsf, 'mmmm/dd/yyyy HH:MM:SS:FFF');
+        dni = datenum(vtsi);
+        dnf = datenum(vtsf);
+        %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-%
+        % 1 & 2 consider stop/start times % for FTE from the file or array  %
+        %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-%
+        t1 = handles.f{2}(handles.nev);
+        t2 = handles.f{4}(handles.nev);
+        fvts1 = datevec(t1, 'yyyy-mm-dd/HH:MM:SS');
+        fvts2 = datevec(t2, 'yyyy-mm-dd/HH:MM:SS');
+        fdn1 = datenum(fvts1);
+        fdn2 = datenum(fvts2);
+        %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH%
+        % a & b consider adjusted FTE window % set by the user input 'w'          %
+        %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH%
+        t1f1 = etime(fvts1,vtsi);   % returns number of seconds from start of window to start of FTE
+        t1f2 = etime(fvts2,vtsi);   % elapsed time from start of window to stop of FTE (s)
+        tstep = handles.a.data(:,1);
+        j = tstep >= t1f1 & tstep < t1f2;
+        k = find(j);
+        ktest = numel(k);
+        if ktest == 0
+            disp('')
+            disp('________________________________________________________');
+            disp('That event number (nev) does not exist for this date');
+            disp('Dave needs to update the code to be less manually annoying.');
+            disp('________________________________________________________');
+
+            return;
+        end
+        handles.w=str2double(get(handles.etxt_w,'String'));
+        ns1 = k(1)-handles.w;                % adds two data points to either side
+        ns2 = k(end) + handles.w;            % of FTE
+        handles.i1 = ns1;
+        handles.i2 = ns2;
+        secs=handles.secs;
+        dwa = secs(ns1);   
+        dwb = secs(ns2);
+        handles.fdna = addtodate(dni,dwa,'second');
+        handles.fdnb = addtodate(dni,dwb,'second');
+        disp(['fdna = ',handles.fdna])
+        disp(['fdnb = ',handles.fdnb])
+        handles.ta=handles.fdna;
+        handles.tb=handles.fdnb;
+%================%
+% TIME STUFF END %
+%================%
+    handles.bc=[handles.BX(handles.i1:handles.i2) handles.BY(handles.i1:handles.i2) handles.BZ(handles.i1:handles.i2)];				% re-assigns B for some reason, should be the same as above.
+    handles.bx = handles.bc(:,1);
+    handles.by = handles.bc(:,2);
+    handles.bz = handles.bc(:,3);
+    handles.ndata = numel(handles.bx);
+    handles.vp=[VX(handles.i1:handles.i2) VY(handles.i1:handles.i2) VZ(handles.i1:handles.i2)];
+    handles.lenb = length(handles.bc(:,1));  
+    % REPLACE_WITH_DASH_DASH- Call MVAB Function
+    [Kbmax,Kbint,Kbmin,qmva,d1,d2,d3]=MVAB(handles.bc,handles.lenb);
+    handles.Kbmax=Kbmax;
+    handles.Kbint=Kbint;
+    handles.Kbmin=Kbmin;
+    handles.ztemp = handles.Kbint;      % 
+    handles.ytemp = handles.Kbmax;      % 
+    handles.xtemp = handles.Kbmin;      % MP Normal
+    handles.nxorig=handles.ztemp(1);
+    handles.nyorig=handles.ztemp(2);
+    handles.nzorig=handles.ztemp(3);
+    % REPLACE_WITH_DASH_DASH- (zx0, zy0, zz0)
+    disp(['nxorig=',num2str(handles.nxorig)]);
+    disp(['nyorig=',num2str(handles.nyorig)]);
+    disp(['nzorig=',num2str(handles.nzorig)]);
+    handles.zs0 = [handles.nxorig, handles.nyorig, handles.nzorig];
+    handles.theta0=acosd(handles.nzorig);
+    handles.phi0=atand(abs(handles.nyorig)/abs(handles.nxorig));
+    if (handles.nxorig < 0.0) && (handles.nyorig >= 0.0);
+      handles.phi0=-handles.phi0+180;
+    end
+    if (handles.nxorig < 0.0) && (handles.nyorig < 0.0);
+      handles.phi0= handles.phi0+180;
+    end
+    if (handles.nxorig >= 0.0) && (handles.nyorig < 0.0);
+      handles.phi0=-handles.phi0+360;
+    end
+
+    handles.dphi = 0.0;
+    handles.dtheta = 0.0;
+    guidata(hObject, handles);
+    set(handles.txt_dphi,'String',num2str(handles.dphi, '%3.1f'));
+    set(handles.etxt_dphi,'String',num2str(handles.dphi, '%3.1f'));
+    set(handles.txt_dtheta,'String',num2str(handles.dtheta, '%3.1f'));
+    set(handles.etxt_dtheta,'String',num2str(handles.dtheta,'%3.1f'));
+    set(uicontrol(handles.txt_theta0),'String',num2str(handles.theta0, '%3.1f'));
+    set(uicontrol(handles.txt_phi0),'String',num2str(handles.phi0, '%3.1f'));
+    set(uicontrol(handles.txt_zs0x),'String',num2str(handles.zs0(1), '%1.3f'));
+    set(uicontrol(handles.txt_zs0y),'String',num2str(handles.zs0(2), '%1.3f'));
+    set(uicontrol(handles.txt_zs0z),'String',num2str(handles.zs0(3), '%1.3f'));
+    set(uicontrol(handles.txt_v0x),'String',num2str(handles.V0(1), '%3.1f  '));
+    set(uicontrol(handles.txt_v0y),'String',num2str(handles.V0(2), '%3.1f  '));
+    set(uicontrol(handles.txt_v0z),'String',num2str(handles.V0(3), '%3.1f  '));
+    
+    handles.headera = strcat('FTE start: ',datestr(handles.fdna), ' NEV: ', num2str(handles.nev),', w:', num2str(handles.w), ', ny:', num2str(handles.ny));
+    handles.headerb = strcat('FTE stop: ',datestr(handles.fdnb), ', sc:', handles.sc, ', src:', handles.src);
+    set(uicontrol(handles.txt_headera),'String',handles.headera);
+    set(uicontrol(handles.txt_headerb),'String',handles.headerb);
+    disp('======================= End Load Function ===================')
+    disp('======================= End Load Function ===================')
+    disp('======================= End Load Function ===================')
+    disp('======================= End Load Function ===================')
+    disp('======================= End Load Function ===================')
+    guidata(hObject, handles);
+    disp('======================= End Load Function ===================')
+    
+function btn_display_Callback(hObject, eventdata, handles)
+    % REPLACE_WITH_DASH_DASH- Update Headers
+    handles.headera = strcat('FTE start: ',datestr(handles.fdna), ...
+        ' NEV: ', num2str(handles.nev),', w:', num2str(handles.w), ...
+        ', ny:', num2str(handles.ny));
+    handles.headerb = strcat('FTE stop: ',datestr(handles.fdnb), ...
+        ', sc:', handles.sc, ', src:', handles.src);
+    set(uicontrol(handles.txt_headera),'String',handles.headera);
+    set(uicontrol(handles.txt_headerb),'String',handles.headerb);
+    % REPLACE_WITH_DASH_DASH- Populate GUI 
+%    axes(handles.axes1);
+%     cla(handles.axes1);
+    disp('==================== 1st Coordinate Transform Data ====================')
+    disp('Transforming zs from GSM to local, using MVAB Kbint value')
+    vza=handles.V0*handles.zs0';
+    vzav=vza*handles.zs0;
+    vhtsv=handles.V0-vzav;
+    vhts=sqrt(vhtsv*vhtsv');
+    vhtsn=vhtsv./vhts;
+    handles.xs0=-vhtsn;
+    handles.ys0=cross(handles.zs0,handles.xs0);
+    handles.ys0=handles.ys0./norm(handles.ys0);
+    disp(' ')
+    nxtest=sind(handles.theta0)*cosd(handles.phi0);
+    nytest=sind(handles.theta0)*sind(handles.phi0);
+    nztest=cosd(handles.theta0);
+    disp(['nxtest = ', num2str(nxtest)])
+    disp(['nytest = ', num2str(nytest)])
+    disp(['nytest = ', num2str(nytest)])
+    disp(['Starting xs (from V0) = ', num2str(handles.xs0, ' %3.3f')])
+    disp(['Starting ys (from X product) = ', num2str(handles.ys0, ' %3.3f')])
+    disp(['Starting zs (from MVAB Kbint) = ', num2str(handles.zs0, ' %3.3f')])
+    disp(['Dot Product of xs & ys = ', num2str(handles.xs0*handles.ys0')])
+    disp(['Dot Product of zs & xs = ', num2str(handles.zs0*handles.xs0')])
+    disp(['Dot Product of ys & zs = ', num2str(handles.ys0*handles.zs0')])
+    disp('Getting adjustment angles for next rotation...')
+    disp('==================== End 1st Coordinate Transform  ====================')
+    disp(' ')
+    disp(' ')
+    disp('=================== 2nd Coordinate Transform ======================')
+
+    % REPLACE_WITH_DASH_DASH- get updated angles from interface bold text in "Manual Adjust" Panel
+    handles.dphi = str2double(get(uicontrol(handles.txt_dphi), 'String')); 
+    handles.dtheta = str2double(get(uicontrol(handles.txt_dtheta), 'String')); 
+    %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH set handles.phi and handles.theta REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+    handles.theta = handles.theta0+handles.dtheta;     %
+    handles.phi = handles.phi0+handles.dphi;           %
+    %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+    handles.nxp=sind(handles.theta)*cosd(handles.phi);
+    handles.nyp=sind(handles.theta)*sind(handles.phi);
+    handles.nzp=cosd(handles.theta);
+    handles.nitr=[handles.nxp,handles.nyp,handles.nzp];
+    handles.zs=handles.nitr;
+    vza=handles.V0*handles.zs';
+    vzav=vza*handles.zs;
+    vhtsv=handles.V0-vzav;
+    vhts=sqrt(vhtsv*vhtsv');
+    vhtsn=vhtsv./vhts;
+    handles.xs=-vhtsn;
+    handles.ys=cross(handles.zs,handles.xs);
+    handles.ys=handles.ys./norm(handles.ys);
+    guidata(hObject, handles);
+    disp(['Final xs after all Xforms = ', num2str(handles.xs,' %2.3f')])
+    disp(['Final ys after all Xforms = ', num2str(handles.ys,' %2.3f')])
+    disp(['Final zs after all Xforms = ', num2str(handles.zs,' %2.3f')])
+    disp(' ')
+    disp('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Orthogonal Test (should be very close to 0.0) REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-')
+    disp(['xs dot ys =', num2str(handles.xs*handles.ys')])
+    disp(['ys dot zs =', num2str(handles.ys*handles.zs')])
+    disp(['xs dot zs =', num2str(handles.xs*handles.zs')])
+    disp(' ')
+    set(uicontrol(handles.txt_dphi),'String',num2str(handles.dphi, '%3.1f  '));
+    set(uicontrol(handles.txt_dtheta),'String',num2str(handles.dtheta, '%3.1f  '));
+    set(uicontrol(handles.etxt_dphi),'String',num2str(handles.dphi, '%3.1f  '));
+    set(uicontrol(handles.etxt_dtheta),'String',num2str(handles.dtheta, '%3.1f  '));
+    set(uicontrol(handles.txt_zsx),'String',num2str(handles.zs(1),'%1.3f'));
+    set(uicontrol(handles.txt_zsy),'String',num2str(handles.zs(2),'%1.3f'));
+    set(uicontrol(handles.txt_zsz),'String',num2str(handles.zs(3),'%1.3f'));
+    set(uicontrol(handles.txt_xsx),'String',num2str(handles.xs(1),'%1.3f'));
+    set(uicontrol(handles.txt_xsy),'String',num2str(handles.xs(2),'%1.3f'));
+    set(uicontrol(handles.txt_xsz),'String',num2str(handles.xs(3),'%1.3f'));
+    set(uicontrol(handles.txt_ysx),'String',num2str(handles.ys(1),'%1.3f'));
+    set(uicontrol(handles.txt_ysy),'String',num2str(handles.ys(2),'%1.3f'));
+    set(uicontrol(handles.txt_ysz),'String',num2str(handles.ys(3),'%1.3f'));
+    set(uicontrol(handles.txt_cphi),'String',num2str(handles.phi, '%3.1f  '));
+    set(uicontrol(handles.txt_ctheta),'String',num2str(handles.theta, '%3.1f  '));
+    handles.dTim1 = handles.secs(handles.i1:handles.i2)-handles.secs(handles.i1);               % my code (dd, 2011)
+
+    % project B into reconstruction coord.
+    handles.bxs=(handles.bc.*handles.nb)*handles.xs';
+    handles.bys=(handles.bc.*handles.nb)*handles.ys';
+    handles.bzs=(handles.bc.*handles.nb)*handles.zs';
+    handles.vxs = -handles.V0*handles.xs';
+    handles.xa0=handles.vxs.*handles.dTim1;
+    handles.iix = handles.i1:handles.i2;
+    handles.dzn=handles.Nx(handles.iix);                    % density reconstruction by matrix
+    handles.Tp = handles.Tx(handles.iix)/handles.kb2;
+    %Project V into reconstruction coord.
+    vxc=zeros(1,handles.ndata);
+    vyc=zeros(1,handles.ndata);
+    vzc=zeros(1,handles.ndata);
+    for i=1:handles.ndata
+      vxc(i)=(handles.vp(i,:)-handles.V0)*handles.xs';
+      vyc(i)=(handles.vp(i,:)-handles.V0)*handles.ys';
+      vzc(i)=(handles.vp(i,:)-handles.V0)*handles.zs';
+    end
+
+    % avplx=mean(vxc);
+    % avply=mean(vyc);
+    % avplz=mean(vzc);
+    % set(uicontrol(handles.txt_ysx), 'String',num2str(avplx, '%3.1f'));
+    % set(uicontrol(handles.txt_ysy),'String',num2str(avply, '%3.1f '));
+    % set(uicontrol(handles.txt_ysz),'String',num2str(avplz, '%3.1f '));
+    zsx = strcat(num2str(handles.zs(1),'%1.3f'),',');
+    zsy = strcat(num2str(handles.zs(2),'%1.3f'),',');
+    zsz = num2str(handles.zs(3),'%1.3f');
+    disp(strcat('(zsx,zsy,zsz)=(',zsx,zsy,zsz,')'));
+    if exist('v0gsm')==1,
+      disp(strcat('v0gsm=',num2str(v0gsm)));
+    end
+    %Calculate vector potential A along y=0
+    ndA=zeros(1,handles.lenb);
+    for i=2:handles.lenb                       %
+      ndA(i)=-(handles.bys(i)+handles.bys(i-1))*(handles.dTim1(i)-...
+          handles.dTim1(i-1))*handles.vxs*handles.nv*0.5;  % Determines A for different
+    end
+    A1=cumsum(ndA);                   % Area: cumulative sum.  every iteration, we add more area
+    A1=A1';                           % transpose A1
+    bb=sqrt(handles.bxs.^2+handles.bys.^2+handles.bzs.^2);  % magnitude of total bfield 
+    pp=handles.dzn.*handles.Tp*handles.kb*handles.nden;     % new pp factor (without nt)
+    bmax=max(bb);                                           % maximum b magnitude
+    nmax=max(handles.dzn)*handles.nden;                     % density maximum value
+    %Normalized factors
+    handles.b0=bmax;                                        % b0 = max total b magnitude
+    p0=bmax*bmax/handles.miu;                               % max pressure value
+    n0=nmax;                                                % max density value from 5 lines above.
+    vv0=sqrt(handles.b0^2/(handles.miu*n0*handles.mp)*1e-6);% max b field divided by max density & constants
+    A0=max(abs(A1));                                        % A0 = maximum Area Value
+    handles.L0=(A0/bmax)*1e-3;                              % L0 = average B/unit area
+    disp(['L0=',num2str(handles.L0)])                       % disp L0
+    handles.pbz=pp./p0+((handles.bzs./handles.b0).^2)/2;    % pbz = magnetic pressure in bz?
+    handles.An=A1./A0;                                      % normalizes range of area from 0 to 1
+    handles.amax1=max(handles.An);                          % max normalized value (1)
+    handles.amin1=min(handles.An);                          % min normalized value (0)
+    handles.fS1=polyfit(handles.An,handles.pbz,4);          %Pt(A)   4th deg poly fit
+    handles.fZ1=polyfit(handles.An,handles.bzs/handles.b0,5); %Bz(A)
+    %REPLACE_WITH_DASH_DASHinterpolationREPLACE_WITH_DASH_DASH%
+    handles.nx=handles.ndata+(handles.ndata-1)*3;               % is this just an approximation for distance?
+    handles.xi=handles.xa0(1):(handles.xa0(handles.ndata)-handles.xa0(1))/...
+        (handles.nx-1):handles.xa0(handles.ndata);
+    bxi=interp1(handles.xa0,handles.bxs./handles.b0,handles.xi,'spline');
+    byi=interp1(handles.xa0,handles.bys./handles.b0,handles.xi,'spline');
+    ht=0;
+    py=0.1/1;
+    handles.mid=round(handles.ny/2)+ht;
+    handles.x=handles.xi./handles.L0;
+    hx=handles.x(2)-handles.x(1);       %uniform grids
+    hy=py*hx;
+    handles.y = zeros(1,handles.ny);
+    for j=1:handles.ny
+      handles.y(j)=(j-handles.mid)*hy;
+    end
+    %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-%
+    clear('ndA');
+    ndA(1)=0;
+    for i=2:handles.nx
+      ndA(i)=-(byi(i)+byi(i-1))*(handles.x(i)-handles.x(i-1))*0.5;
+    end
+    A2=cumsum(ndA);
+    handles.u=zeros(handles.ny,handles.nx);
+    handles.udy=zeros(handles.ny,handles.nx);
+    handles.udx=zeros(handles.ny,handles.nx);
+    handles.u(handles.mid,:)=A2;
+    handles.udy(handles.mid,:)=bxi;
+    handles.udx(handles.mid,:)=byi;
+    handles.c1=[handles.nx handles.ny handles.mid hx hy handles.amax1 handles.amin1];
+    %REPLACE_WITH_DASH_DASHplot limitsREPLACE_WITH_DASH_DASH
+    handles.ymin = min(handles.y*handles.L0);
+    handles.ymax = max(handles.y*handles.L0);
+    handles.xmin = min(handles.x*handles.L0);
+    handles.xmax = max(handles.x*handles.L0);
+    handles.hafx = handles.xmax*0.5;
+    handles.hafy = handles.ymax*0.5;
+    
+    guidata(hObject,handles);
+    % disp('B Vector Magnitudes are', num2str(sqrt(handles.bc(:,1).^2+handles.bc(:,2).^2)))
+    % REPLACE_WITH_DASH_DASH call plot function
+    % set(gcf,'CurrentAxes',handles.axes1);
+    % cla(handles.axes1) 
+    handles = plotstuff(hObject,eventdata,handles);
+    % set(gcf,'CurrentAxes',handles.axes2);
+    % cla(handles.axes2) 
+    guidata(hObject, handles);
+    handles = polyplot(hObject,eventdata,handles);
+    guidata(hObject, handles);
+    disp('')
+    disp('======================= End Display Function ===================')
+    disp('======================= End Display Function ===================')
+    disp('======================= End Display Function ===================')
+    disp('======================= End Display Function ===================')
+    disp('======================= End Display Function ===================')
+    disp('======================= End Display Function ===================')
+    disp(strcat(handles.doy,'; nev=',num2str(handles.nev),'; ny=',...
+      num2str(handles.ny),'; w=', num2str(handles.w),'; dtheta=',...
+      num2str(handles.dtheta),'; dphi=',num2str(handles.dphi)))
+
+function btn_exit_Callback(hObject, eventdata, handles)
+gca;
+clear all;
+close all;
+clc;
+
+function pm_doy_Callback(hObject, eventdata, handles)
+contents = cellstr(get(hObject,'String'));
+handles.doy = contents{get(hObject,'Value')};
+disp(['handles.doy from callbackFcn= ', handles.doy])
+handles.yr = sscanf(handles.doy,'%4c%*6c',2);
+handles.month = sscanf(handles.doy, '%*5c%2c%*3c',2);
+handles.day = sscanf(handles.doy, '%*8c%2c',2);
+guidata(hObject, handles);
+
+function pm_doy_CreateFcn(hObject, eventdata, handles)
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+contents = cellstr(get(hObject,'String'));
+handles.doy = contents{get(hObject,'Value')};
+disp(['handles.doy from createFcn= ', handles.doy])
+handles.yr = sscanf(handles.doy,'%4c%*6c',2);
+handles.month = sscanf(handles.doy, '%*5c%2c%*3c',2);
+handles.day = sscanf(handles.doy, '%*8c%2c',2);
+guidata(hObject, handles);
+
+function etxt_ti_Callback(hObject, eventdata, handles)
+handles.ti=get(hObject,'String');
+disp(['handles.ti from callbackFcn= ',handles.ti])
+guidata(hObject, handles);
+
+function etxt_ti_CreateFcn(hObject, eventdata, handles)
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+handles.ti=get(hObject,'String');
+disp(['handles.ti from createFcn= ',handles.ti])
+guidata(hObject, handles);
+
+function etxt_tf_Callback(hObject, eventdata, handles)
+handles.tf=get(hObject,'String');
+disp(['handles.tf from callbackFcn= ',handles.tf])
+guidata(hObject, handles);
+
+function etxt_tf_CreateFcn(hObject, eventdata, handles)
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+handles.tf=get(hObject,'String');
+disp(['handles.tf from createFcn= ',handles.tf])
+guidata(hObject, handles);
+
+function pm_sc_Callback(hObject, eventdata, handles)
+contents = cellstr(get(hObject,'String'));
+handles.sc = contents{get(hObject,'Value')};
+guidata(hObject, handles);
+disp(['handles.sc from callbackFcn= ',handles.sc])
+
+function pm_sc_CreateFcn(hObject, eventdata, handles)
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+contents = cellstr(get(hObject,'String'));
+handles.sc = contents{get(hObject,'Value')};
+guidata(hObject, handles);
+disp(['handles.sc from createFcn= ',handles.sc])
+
+function pm_src_Callback(hObject, eventdata, handles)
+contents = cellstr(get(hObject,'String'));
+handles.src = contents{get(hObject,'Value')};
+guidata(hObject, handles);
+disp(['handles.src from callbackFcn= ',handles.src])
+
+function pm_src_CreateFcn(hObject, eventdata, handles)
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+contents = cellstr(get(hObject,'String'));
+handles.src = contents{get(hObject,'Value')};
+guidata(hObject, handles);
+disp(['handles.src from createFcn= ',handles.src])
+
+function etxt_w_Callback(hObject, eventdata, handles)
+handles.w=str2double(get(hObject,'String'));
+disp(['handles.w from callbackFcn= ',num2str(handles.w)])
+guidata(hObject, handles);
+
+function etxt_w_CreateFcn(hObject, eventdata, handles)
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+handles.w=str2double(get(hObject,'String'));
+disp(['handles.w from CreateFcn= ',num2str(handles.w)])
+guidata(hObject, handles);
+
+function etxt_nev_Callback(hObject, eventdata, handles)
+handles.nev=str2double(get(hObject,'String'));
+disp(['handles.nev from callbackFcn= ',num2str(handles.nev)])
+guidata(hObject, handles);
+
+function etxt_nev_CreateFcn(hObject, eventdata, handles)
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+handles.nev=str2double(get(hObject,'String'));
+disp(['handles.nev from CreateFcn= ',num2str(handles.nev)])
+guidata(hObject, handles);
+
+function etxt_dphi_Callback(hObject, eventdata, handles)
+handles.dphi=str2double(get(hObject,'String'));
+disp(['phi from CallbackFcn= ', num2str(handles.dphi)])
+guidata(hObject, handles);
+set(uicontrol(handles.txt_dphi),'String',num2str(handles.dphi));
+uicontrol(handles.etxt_dtheta);      %set focus to the next field.
+guidata(hObject, handles);          %update again
+
+function etxt_dphi_CreateFcn(hObject, eventdata, handles)
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+handles.dphi=get(hObject,'String');
+disp(['handles.dphi from CreateFcn= ', num2str(handles.dphi)])
+
+function etxt_dtheta_Callback(hObject, eventdata, handles)
+handles.dtheta=str2double(get(hObject,'String'));
+disp(['dtheta from CallbackFcn= ', num2str(handles.dtheta)])
+guidata(hObject, handles);          %update handles.
+set(uicontrol(handles.txt_dtheta),'String',num2str(handles.dtheta));
+uicontrol(handles.etxt_azi);
+guidata(hObject, handles);          %update again
+
+function etxt_dtheta_CreateFcn(hObject, eventdata, handles)
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+handles.dtheta=str2double(get(hObject,'String'));
+disp(['handles.dtheta from CreateFcn= ', num2str(handles.dtheta)])
+guidata(hObject, handles);
+
+function etxt_azi_Callback(hObject, eventdata, handles)
+handles.azi=str2double(get(hObject,'String'));
+disp(['handles.azi from CallbackFcn= ', num2str(handles.azi)])
+guidata(hObject, handles);
+set(uicontrol(handles.txt_dphi),'String',num2str(handles.dphi));
+uicontrol(handles.etxt_pol);
+guidata(hObject, handles); 
+
+function etxt_azi_CreateFcn(hObject, eventdata, handles)
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+handles.azi=str2double(get(hObject,'String'));
+disp(['handles.azi from CreateFcn= ', num2str(handles.azi)])
+guidata(hObject, handles);
+
+function etxt_pol_Callback(hObject, eventdata, handles)
+handles.pol=str2double(get(hObject,'String'));
+disp(['handles.pol from CallbackFcn= ', num2str(handles.pol)])
+guidata(hObject, handles);
+set(uicontrol(handles.txt_dtheta),'String',num2str(handles.dtheta));
+uicontrol(handles.btn_display);
+guidata(hObject, handles);          %update again
+
+function etxt_pol_CreateFcn(hObject, eventdata, handles)
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+handles.pol=str2double(get(hObject,'String'));
+disp(['handles.pol from CreateFcn= ', num2str(handles.pol)])
+guidata(hObject, handles);
+
+function etxt_num_Callback(hObject, eventdata, handles)
+handles.num=str2double(get(hObject,'String'));
+disp(['handles.num from CallbackFcn= ',handles.num])
+guidata(hObject, handles);
+
+function etxt_num_CreateFcn(hObject, eventdata, handles)
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+handles.num=str2double(get(hObject,'String'));
+disp(['handles.num from createFcn= ',handles.num])
+guidata(hObject, handles);
+
+function txt_dtheta_CreateFcn(thetaObject, eventdata, handles)
+handles.txt_dtheta=str2double(get(thetaObject,'String'));
+disp(['handles.txt_dtheta from CreateFcn= ',num2str(handles.txt_dtheta)]);
+guidata(thetaObject, handles);
+
+function txt_dphi_CreateFcn(phiObject, eventdata, handles)
+handles.txt_dphi=str2double(get(phiObject,'String'));
+disp(['handles.txt_dphi from CreateFcn= ',num2str(handles.txt_dphi)]);
+guidata(phiObject, handles);
+
+function handles = plot_data_calc(hObject,eventdata,handles)
+%save the current handles structure 
+%for the GUI figure 
+[handles.Aup,handles.Aupdx,handles.Aupdx]=gsup(handles.c1,handles.x,handles.y,handles.u,handles.udy,handles.udx,handles.fS1);
+[handles.Adn,handles.Adndy,handles.Adndx]=gsdn(handles.c1,handles.x,handles.y,handles.u,handles.udy,handles.udx,handles.fS1);
+handles.Aup=handles.Aup+handles.Adn;
+handles.Aup(handles.mid,:)=handles.Aup(handles.mid,:)/2;
+handles.Aupdx=handles.Aupdx+handles.Adndy;
+handles.Aupdx(handles.mid,:)=handles.Aupdx(handles.mid,:)/2;
+handles.Aupdx=handles.Aupdx+handles.Adndx;
+handles.Aupdx(handles.mid,:)=handles.Aupdx(handles.mid,:)/2;
+handles.gg=1:handles.ny;
+handles.Bzup=zeros(handles.ny,handles.nx);
+for j=1:handles.ny
+  for i=1:handles.nx
+    handles.Bzup(j,i)=polyval(handles.fZ1,handles.Aup(j,i));            % added handles to bzup
+    if handles.Aup(j,i)>handles.amax1
+      handles.Bzup(j,i)=polyval(handles.fZ1,handles.amax1);     % added handles to bzup
+    elseif handles.Aup(j,i)<handles.amin1
+      handles.Bzup(j,i)=polyval(handles.fZ1,handles.amin1);     % added handles to bzup
+    end
+  end
+end
+handles.B3 = handles.Bzup(handles.gg,:)*handles.b0*1e9;              % defines 3rd axis
+
+function handles = plotstuff(hObject, eventdata,handles)
+% Plotstuff only actually plots the main axes (called axes1) which is the 
+% window with the magnetic field lines and contour plot and vectors.
+% The other window with the poly fit (axes2) is plotted by the function
+% polyplot
+%     caller = get(hObject, 'Tag');
+%     dsp = 'btn_display';
+%     sve = 'btn_save';
+%     cmpds = strcmp(caller,dsp);
+%     cmpsv = strcmp(caller,sve);
+%     xx0 = 0;
+%     if cmpds == 1
+%         
+%         set(gcf,'CurrentAxes',handles.axes1)
+%     else
+%         % figure 2 is the save window
+%         figure(2)
+%         % set(gcf,'CurrentAxes',handles.MainPrintTempFig)
+%     end
+    %  This is a better way:
+    cla(handles.axes1,'reset')   
+    handles = plot_data_calc(hObject,eventdata,handles);           %call WLT code;
+    xlabel(handles.axes1,'x [km]','fontsize',12);
+    ylabel(handles.axes1,'y [km]','fontsize',12);
+    set(gcf,'CurrentAxes',handles.axes1)
+    pcolor(handles.x*handles.L0,handles.y(handles.gg)*handles.L0,handles.B3);            % displays 3rd axis (bz) in faceted shading
+    shading interp                       % changes shading to interpolated
+    minb3=min(min(handles.B3));
+    maxb3=max(max(handles.B3));
+    caxis([minb3 maxb3]);
+    handles.zbar=colorbar('vertical');
+    set(handles.zbar,'Fontsize',8);
+    set(get(handles.zbar,'XLabel'),'String','Bz [nT]','Rotation',0,'HorizontalAlignment','left','Fontsize',10);
+    hold on;
+    [cc,hh]=contour(handles.x*handles.L0,handles.y(handles.gg)*handles.L0,handles.Aup(handles.gg,:),[-4:0.11:4],'k');
+    set(hh,'linewidth',1.0);
+    %REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHquiverREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+    u = handles.xa0;
+    v = zeros(1,handles.ndata);
+    x = handles.bxs';
+    y = handles.bys';
+    scale = 0.3;
+    color = 'w';
+    quiv1=quiver(u,v,x,y,scale,color);  % plots white arrows accross middle.
+    set(quiv1,'linewidth',1.5);                          % sets linewidth for quiver arrows
+    set(handles.axes1,'fontsize',10,'TickDir','out','linewidth',1.0);
+    axis equal
+    handles.xdist = handles.x*handles.L0;
+    % fudge factor for x range.
+    if handles.xdist <= 0
+      axis([min(handles.x*handles.L0), 0, min(handles.y*handles.L0), max(handles.y*handles.L0)])
+    else
+      axis([0, max(handles.x*handles.L0), min(handles.y*handles.L0), max(handles.y*handles.L0)])
+    end
+
+function etxt_ny_Callback(hObject, eventdata, handles)
+handles.ny=str2double(get(hObject,'String'));
+disp(['handles.ny from CallbackFcn= ', num2str(handles.ny)])
+guidata(hObject, handles);
+
+function etxt_ny_CreateFcn(hObject, eventdata, handles)
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+handles.ny=str2double(get(hObject,'String'));
+disp(['handles.ny from CreateFcn= ', num2str(handles.ny)])
+guidata(hObject, handles);
+
+function txt_headera_CreateFcn(hObject, eventdata, handles)
+handles.header = str2double(get(hObject,'String'));
+guidata(hObject,handles);
+
+function axes2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to axes2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+% Hint: place code in OpeningFcn to populate axes2
+
+function btn_testcase_Callback(hObject, eventdata, handles)
+% handles.TestCaseBtn = 42;
+% TCB = handles.TestCaseBtn;
+% disp(strcat('This is TCB in btn_testcase',num2str(TCB)));
+% 
+ handles = TestFcn(hObject,eventdata,handles);
+
+function handles = TestFcn(hObject, eventdata, handles)
+    % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH Stefan and Dave indexing
+    %     iidx = handles.ndata-1;
+    % 
+    %     if handles.polyamin1 == 0
+    %         midx = round(handles.An(2:iidx)/0.01);
+    %         fidx = floor(handles.An(handles.ndata))/0.01;
+    %         idx = cat(1,1,midx,fidx);
+    %     else
+    %         midx = 100 - abs(round(handles.An(2:iidx)/0.01));
+    %         fidx = abs(floor(handles.An(handles.ndata))/0.01) - 99;
+    %         idx = cat(1,100,midx,fidx);
+    %     end
+    % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH 
+    
+    % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH Dave Old Code for Indexing
+    % some variables:
+    % handles.An = norm vector potential (data num = handles.ndata)
+    % handles.pbz = mag field pressure (data num = handles.ndata)
+    % Norm Check:
+    % nmck = max(handles.An)-min(handles.An);
+    % if nmck ~= 1.0
+    %    disp('Magnetic Vector Potential is not normalized, please fix')
+    %    return;
+    % end
+    ax1 = handles.ax1;
+    yys1 = handles.yys1;
+    nd = numel(handles.An);
+    ad = numel(handles.ax1);
+    anr = round(handles.An(2:nd)/0.01); % rounded handles.An1 (2 dec)
+    axr = round(ax1(2:ad)'/0.01);
+    POIs = zeros(2,2,nd);
+    
+    ad = numel(axr);                    % # elements in 'axr' array
+    POIs(1,1,:) = handles.An;           % Data x axis
+    POIs(1,2,:) = handles.pbz;          % Data y axis
+    
+    %  +++++++++++++++++
+    %  FIX THIS!!!! (then test)
+    %  +++++++++++++++++
+    
+    % [tf, loc] = ismember(anr, axr);            
+    loc2 = loc + 101;
+    test1 = (ax1'+2)/0.01
+    [tft,LOC]=intersect(test1, loc2)
+    
+    POIs(2,1,:) = ax1(LOC);              % x axis from fit
+    POIs(2,2,:) = yys1(LOC);              % y axis from fit
+    disp();                                    % an = data
+    % ++++++++++++++++++
+    % ++++++++++++++++++
+    %                                             % ax = fit line
+    %                        % empty matrix to hold all relevant data points
+    %         % x axis from data
+    %         [tf,indx] = ismember(axr,anr);    % Super Clunky... use intersect
+    %         [c,ia,ib] = intersect(axr,anr);     %#ok<*ASGLU> % so fast!
+    %        Intersect doesn't do repeated values... stops after find one.
+    %        use ismember instead:
+    %         
+    %         
+    %         pbz = handles.pbz;
+    %         yys = yys1;
+    %         rzms=sum((pbz-yys(ia)').^2/nd);
+    %         result = [POIs(1,2,:),POIs(2,2,:)];
+    %         sdev = std2(result);
+    %         var = sdev^2;
+    %         set(uicontrol(handles.txt_sd),'String',num2str(sdev, '%1.3f'));
+    %         set(uicontrol(handles.txt_var),'String',num2str(var*100, '%1.3f'));
+    %         for ii = 1:1:nd
+    %             disp(['ii = ',num2str(ii)])
+    %             for jj = 1:1:ad
+    %                 disp(['ii= ',num2str(ii)])
+    %                 disp(['jj = ', num2str(jj)])                
+    %                 tf = isequal(anr(ii),axr(jj));
+    %                 disp(['jj= ',num2str(jj)])
+    %                 disp(['tf= ',num2str(tf)])
+    %                 disp(['anr(ii)=', num2str(anr(ii))])
+    %                 disp(['axr(jj)=', num2str(axr(jj))])
+    %                 
+    %                                 if tf == 1
+    %                                     POIs(2,1,ii) = jj;
+    %                                 else
+    %                                     POIs(2,1,ii) = 0;
+    %                 disp(['nope. moving on', num2str(ii)]);
+    %                 end
+    %                 disp(['POIs(2,1,ii)=', num2str(POIs(2,1,ii))])
+    %             end
+    %         end
+    %         handles.POIs(1,1,:) = handles.An    % - x axis
+    %         handles.POIs(1,2,:) = handles.pbz   % - y axis
+    %         handles.POIs(2,1,:) = ax1           % values that match handles.An values
+    %         handles.POIs(2,2,:) = yys1          % values at ax1/An points of interest(POIs)
+    %         kk = isequal(handles.POIs,1);
+    %         handles.POIs(2,2,kk) = yys1(kk);
+            % For Line Break only
+    % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+
+    % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH Actual stuff we calculate and display
+    ydiff = abs(handles.polyyys1(loc2)' - handles.pbz);
+    sdev = std2(ydiff);
+    maxdiff = max(ydiff);
+    set(uicontrol(handles.txt_sd),'String',num2str(sdev, '%1.3f'));
+    set(uicontrol(handles.txt_var),'String',num2str(maxdiff, '%1.3f'));
+    disp(); 
+%disp();
+% handles.TestFcnVar = 43;
+% TCV = handles.TestFcnVar;
+% TCB = handles.TestCaseBtn;
+% fprintf('\n');
+% fprintf('This is TCB in TestFcn: %d\n',handles.TestCaseBtn);
+% fprintf('This is TCV in TestFcn: %d\n',TCV)
+% fprintf('\n');
+% return
+
+function handles = polycalc(hObject, eventdata, handles)
+
+amax1=max(handles.An);
+amin1=min(handles.An);
+handles.ax1=amin1:0.01:amax1;
+ax1 = handles.ax1;
+df1=polyder(handles.fS1); %dPt/dA        % derivative of the fit 
+handles.yys1=polyval(handles.fS1,handles.ax1);           % value of the function f1
+yys1 = handles.yys1;
+yyz1=polyval(handles.fZ1,ax1);
+handles.polyamax1=amax1;
+handles.polyamin1=amin1;
+handles.polyax1=ax1;            % x axis on polyfit plot
+handles.polydf1=df1;
+handles.polyyys1=yys1;          % y axis on polyfit plot
+handles.polyyyz1=yyz1;
+
+% guidata(hObject, handles);
+
+% REPLACE_WITH_DASH_DASH- Executes during object creation, after setting all properties.
+function axes1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to axes1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+% Hint: place code in OpeningFcn to populate axes1
+
+function polynums(hObject,eventdata, handles)
+%     iidx = handles.ndata-1;
+% 
+%     if handles.polyamin1 == 0
+%         midx = round(handles.An(2:iidx)/0.01);
+%         fidx = floor(handles.An(handles.ndata))/0.01;
+%         idx = cat(1,1,midx,fidx);
+%     else
+%         midx = 100 - abs(round(handles.An(2:iidx)/0.01));
+%         fidx = abs(floor(handles.An(handles.ndata))/0.01) - 99;
+%         idx = cat(1,100,midx,fidx);
+%     end
+%     
+%     ydiff = abs(handles.polyyys1(idx)' - handles.pbz);
+%     sdev = std2(ydiff);
+%     maxdiff = max(ydiff);
+%     set(uicontrol(handles.txt_sd),'String',num2str(sdev, '%1.3f'));
+%     set(uicontrol(handles.txt_var),'String',num2str(maxdiff, '%1.3f'));
+% The Purpose of polynums is to calculate and display quantitative
+    % fit values for the poly fit.  It's problematic at best in its
+    % current format.
+
+
+function handles = polyplot(hObject,eventdata,handles)
+%     PPgcbo = get(gcbo,'Tag');
+%     PPgcbf = get(gcbf,'Tag');
+%     PPgca = get(gca,'Tag');
+%     sprintf('%s', 'polyplot gcbo is ',PPgcbo);
+%     sprintf('%s', 'polyplot gcbf is ', PPgcbf);
+%     sprintf('%s', 'polyplot gca is ',PPgca);
+    handles = polycalc(hObject,eventdata,handles);
+    polynums(hObject,eventdata,handles);
+    % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH plot TOP RIGHT function from WLT's 6 figures
+    set(handles.axes2,'NextPlot','replace');
+    plot(handles.axes2,handles.An,handles.pbz,'ko','Markersize',5); grid on; 
+    set(handles.axes2,'NextPlot','add');
+    plot(handles.axes2,handles.polyax1,handles.polyyys1,'color',[0.5 0.5 0.5],'linewidth',3);
+    set (handles.axes2,'ylim',[min(handles.pbz)-0.1 max(handles.pbz)+0.1],'ytick',[0:0.1:1],'fontsize',8);
+    ylabel(handles.axes2,'Pt','rotation',0);
+    xlabel(handles.axes2,'A/A0');
+%===================== END PLOT POLY FIT =================================
+
+##### SOURCE END #####
+--></body></html>
